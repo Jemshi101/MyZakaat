@@ -469,7 +469,7 @@ public class App extends Application {
                         break;
 
                     case DATE_FORMAT_5:
-                        sdf = new SimpleDateFormat("dd MMM, yyyy", getCurrentLocale());
+                        sdf = new SimpleDateFormat("dd-MMM-yyyy", getCurrentLocale());
                         sdf.setTimeZone(getTimeZone(isResultGMT));
                         resultDate = sdf.format(new Date(calTemp.getTimeInMillis()));
                         break;

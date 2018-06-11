@@ -1,5 +1,6 @@
 package com.quartzbit.myzakaat.model
 
+import com.quartzbit.myzakaat.app.App
 import java.util.*
 
 /**
@@ -16,7 +17,10 @@ class TransactionListBean : BaseBean() {
         var list = ArrayList<TransactionBean>()
 
         for(bean in transactions){
-            if(Date(dateInMillis). == Date(bean.date))
+            if(bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
+                            false, dateInMillis, false)){
+
+            }
         }
 
         return list
