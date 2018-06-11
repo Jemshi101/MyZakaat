@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:minWidth="300dp"
+	app:cardBackgroundColor="@color/white"
+	app:cardCornerRadius="25dp">
+
+	<LinearLayout
+		android:minWidth="300dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<com.quartzbit.myzakaat.widgets.CustomTextView
+			android:id="@+id/txt_dialog_select_title"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:gravity="left|center_vertical"
+			android:padding="10dp"
+			android:text="@string/label_select"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="@color/text_hint" />
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1px"
+			android:background="@color/gray_transparent_70" />
+
+		<ListView
+			android:id="@+id/lv_dialog_select"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center|center_vertical|center_horizontal"
+			android:divider="@color/carbon_transparent_70"
+			android:dividerHeight="1px"
+			android:minWidth="300dp"
+			android:padding="10dp"
+			tools:listitem="@layout/item_select" />
+	</LinearLayout>
+
+</androidx.cardview.widget.CardView>
+

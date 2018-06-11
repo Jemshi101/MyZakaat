@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_bottombar_home"
+        android:title="@string/menu_home"/>
+    <item
+        android:id="@+id/action_chat"
+        android:icon="@drawable/ic_bottombar_chat"
+        android:title="@string/menu_chat"/>
+    <item
+        android:id="@+id/action_trees"
+        android:icon="@drawable/ic_bottombar_trees"
+        android:title="@string/menu_trees"/>
+    <item
+        android:id="@+id/action_notifications"
+        android:icon="@drawable/ic_bottombar_notifications"
+        android:title="@string/menu_notifications"/>
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_bottombar_profile"
+        android:title="@string/menu_profile"/>
+
+
+</menu>

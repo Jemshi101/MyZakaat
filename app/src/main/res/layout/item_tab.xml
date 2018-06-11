@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <com.quartzbit.myzakaat.widgets.CustomTextView
+        android:id="@+id/txt_tab_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:text="@string/sample_tab_title"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/white"/>
+
+    <com.quartzbit.myzakaat.widgets.CustomTextView
+        android:id="@+id/txt_tab_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/circle_white"
+        android:gravity="center"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
+        android:text="@string/sample_tab_count"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorPrimary"/>
+
+</LinearLayout>

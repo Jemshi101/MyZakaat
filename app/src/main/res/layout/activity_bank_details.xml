@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	style="@style/NestedScrollBarStyle"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".activity.BankDetailsActivity">
+	
+	<LinearLayout
+		style="@style/ActivityParent"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+		<LinearLayout style="@style/MenuItemParent">
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				style="@style/ItemLabel"
+				android:text="@string/label_total_balance" />
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				android:id="@+id/txtBankDetailsTotalBalance"
+				style="@style/ItemValue"
+				android:text="@string/sample_00" />
+		
+		</LinearLayout>
+		
+		<LinearLayout style="@style/MenuItemParent">
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				style="@style/ItemLabel"
+				android:text="@string/label_interest" />
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				android:id="@+id/txtBankDetailsInterest"
+				style="@style/ItemValue"
+				android:text="@string/sample_00" />
+		
+		</LinearLayout>
+		
+		<LinearLayout style="@style/MenuItemParent">
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				style="@style/ItemLabel"
+				android:text="@string/label_current_balance" />
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				android:id="@+id/txtBankDetailsCurrentBalance"
+				style="@style/ItemValue"
+				android:text="@string/sample_00" />
+		
+		</LinearLayout>
+		
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1px"
+			android:layout_marginTop="20dp"
+			android:layout_marginBottom="20dp"
+			android:background="@color/underline_light" />
+		
+		
+		<LinearLayout style="@style/MenuItemParent">
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				style="@style/ItemLabel"
+				android:text="@string/label_lowest_amount" />
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				android:id="@+id/txtBankDetailsLowestAmount"
+				style="@style/ItemValue"
+				android:text="@string/sample_00" />
+		
+		</LinearLayout>
+	</LinearLayout>
+</androidx.core.widget.NestedScrollView>

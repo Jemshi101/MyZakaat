@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="@dimen/drawer_width"
+	android:layout_height="match_parent"
+	android:background="@color/white"
+	android:minWidth="@dimen/drawer_width"
+	android:orientation="vertical">
+	
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:scaleType="centerCrop"
+		app:srcCompat="@color/colorPrimaryDark" />
+	
+	<androidx.core.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+		
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minWidth="300dp"
+			android:orientation="vertical">
+			
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="200dp"
+				android:gravity="center_vertical"
+				android:orientation="horizontal"
+				android:padding="20dp">
+				
+				<ImageView
+					android:id="@+id/iv_drawer_profile_photo"
+					android:layout_width="140dp"
+					android:layout_height="140dp"
+					android:layout_gravity="center_vertical"
+					android:background="@drawable/circle_carbon_transparent"
+					android:scaleType="centerCrop"
+					app:srcCompat="@drawable/ic_profile_photo_default" />
+				
+				<ImageButton
+					android:id="@+id/ib_drawer_edit"
+					android:layout_width="40dp"
+					android:layout_height="40dp"
+					android:layout_gravity="center_vertical"
+					android:layout_marginLeft="120dp"
+					android:background="@drawable/btn_click_circle_orange_dark"
+					android:onClick="onDrawerProfileEditClick"
+					android:padding="10dp"
+					android:scaleType="centerInside"
+					app:srcCompat="@drawable/ic_edit" />
+			
+			</FrameLayout>
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				android:id="@+id/txt_drawer_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				android:minHeight="40dp"
+				android:paddingLeft="20dp"
+				android:paddingRight="20dp"
+				android:text="@string/sample_name"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:textColor="@color/white"
+				android:textSize="24sp"
+				android:textStyle="bold" />
+			
+			
+			<com.quartzbit.myzakaat.widgets.CustomTextView
+				android:id="@+id/txt_drawer_email"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				android:minHeight="30dp"
+				android:paddingLeft="20dp"
+				android:paddingRight="20dp"
+				android:text="@string/sample_email"
+				android:textColor="@color/white"
+				android:textSize="16sp" />
+			
+			
+			<LinearLayout
+				style="@style/MenuItemParent"
+				android:layout_marginTop="20dp"
+				android:onClick="onDrawerMyDearestCountriesClick">
+				
+				<ImageView
+					style="@style/MenuItemImage"
+					app:srcCompat="@drawable/ic_dearest_countries" />
+				
+				<com.quartzbit.myzakaat.widgets.CustomTextView
+					android:id="@+id/customTextView"
+					style="@style/MenuItemLabel"
+					android:text="@string/label_my_dearest_countries" />
+			</LinearLayout>
+			
+			<LinearLayout
+				style="@style/MenuItemParent"
+				android:onClick="onDrawerMyDearestFriendsClick">
+				
+				<ImageView
+					style="@style/MenuItemImage"
+					app:srcCompat="@drawable/ic_dearest_friends" />
+				
+				<com.quartzbit.myzakaat.widgets.CustomTextView
+					style="@style/MenuItemLabel"
+					android:text="@string/label_my_dearest_friends" />
+			</LinearLayout>
+			
+			<LinearLayout
+				style="@style/MenuItemParent"
+				android:onClick="onDrawerSearchClick">
+				
+				<ImageView
+					style="@style/MenuItemImage"
+					app:srcCompat="@drawable/ic_search" />
+				
+				<com.quartzbit.myzakaat.widgets.CustomTextView
+					style="@style/MenuItemLabel"
+					android:text="@string/btn_search" />
+			</LinearLayout>
+			
+			<LinearLayout
+				style="@style/MenuItemParent"
+				android:onClick="onLogoutClick">
+				
+				<ImageView
+					style="@style/MenuItemImage"
+					app:srcCompat="@drawable/ic_logout" />
+				
+				<com.quartzbit.myzakaat.widgets.CustomTextView
+					style="@style/MenuItemLabel"
+					android:text="@string/label_logout" />
+			</LinearLayout>
+			
+			
+			<!--<ImageButton
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_marginTop="60dp"
+				android:background="@drawable/btn_click_transparent_rectangle"
+				android:onClick="onDrawerSettingsClick"
+				app:srcCompat="@drawable/ic_drawer_settings"/>-->
+			
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="50dp" />
+		
+		</LinearLayout>
+	</androidx.core.widget.NestedScrollView>
+</FrameLayout>
