@@ -1,13 +1,13 @@
-package `in`.techware.afcetcbus.database.entity
+package com.quartzbit.myzakaat.dbUtils.entity
 
-import `com`.quartzbit.myzakaat.model.LocationBean
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.quartzbit.myzakaat.model.LocationBean
 
 /**
  * Created by Jemsheer K D on 08 January, 2018.
- * Package `in`.techware.afcetcbus.database.entity
+ * Package `com`.quartzbit.myzakaat.database.entity
  * Project AFS_Bus_App
  */
 

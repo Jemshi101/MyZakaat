@@ -14,6 +14,7 @@ import com.quartzbit.myzakaat.model.TransactionListBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class TransactionListTask extends AsyncTask<Void, Void, TransactionListBe
     private Exception mLastError = null;
     private TransactionListTaskListener transactionListTaskListener;
 
-    TransactionListTask(GoogleAccountCredential credential) {
+    public TransactionListTask(HashMap<String, String> urlParams, GoogleAccountCredential credential) {
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         mService = new com.google.api.services.sheets.v4.Sheets.Builder(

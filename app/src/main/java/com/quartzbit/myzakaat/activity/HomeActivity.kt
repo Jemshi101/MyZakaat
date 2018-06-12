@@ -7,9 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.View
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.material.snackbar.Snackbar
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.sheets.v4.SheetsScopes
@@ -17,14 +14,16 @@ import com.quartzbit.myzakaat.R
 import com.quartzbit.myzakaat.app.App
 import com.quartzbit.myzakaat.dialogs.SelectDateDialog
 import com.quartzbit.myzakaat.listeners.PermissionListener
-import com.quartzbit.myzakaat.net.WSAsyncTasks.TransactionListTask
+import com.quartzbit.myzakaat.listeners.TransactionListListener
+import com.quartzbit.myzakaat.model.TransactionListBean
+import com.quartzbit.myzakaat.net.DataManager
 import com.quartzbit.myzakaat.util.AppConstants
 import kotlinx.android.synthetic.main.activity_home.*
-import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
+import kotlin.collections.HashMap
 
 
-class HomeActivity : BaseAppCompatNoDrawerActivity(), EasyPermissions.PermissionCallbacks {
+class HomeActivity : BaseAppCompatNoDrawerActivity() {
     lateinit var mCredential: GoogleAccountCredential
 
     val REQUEST_ACCOUNT_PICKER = 1000;
@@ -72,17 +71,13 @@ class HomeActivity : BaseAppCompatNoDrawerActivity(), EasyPermissions.Permission
                 applicationContext, SCOPES)
                 .setBackOff(ExponentialBackOff())
 
-        var permissionListener = object : PermissionListener {
-            override fun onPermissionCheckCompleted(requestCode: Int, isPermissionGranted: Boolean) {
-
-                if (requestCode == REQUEST_PERMISSIONS_GET_ACCOUNTS) {
-                    if (isPermissionGranted) {
-                        chooseAccount();
-                    } else {
-                        Snackbar.make(coordinatorLayout, "Accounts Permission Required", Snackbar.LENGTH_LONG).show()
-                    }
+        val permissionListener = PermissionListener { requestCode, isPermissionGranted ->
+            if (requestCode == REQUEST_PERMISSIONS_GET_ACCOUNTS) {
+                if (isPermissionGranted) {
+                    chooseAccount();
+                } else {
+                    Snackbar.make(coordinatorLayout, "Accounts Permission Required", Snackbar.LENGTH_LONG).show()
                 }
-
             }
         }
         addPermissionListener(permissionListener)
@@ -97,8 +92,32 @@ class HomeActivity : BaseAppCompatNoDrawerActivity(), EasyPermissions.Permission
         } else if (!App.isNetworkAvailable()) {
             Snackbar.make(coordinatorLayout, AppConstants.NO_NETWORK_AVAILABLE, Snackbar.LENGTH_LONG).show()
         } else {
-            var transactionTak = TransactionListTask(mCredential).execute()
+
+            fetchTransactionList(mCredential)
+
         }
+    }
+
+    private fun fetchTransactionList(mCredential: GoogleAccountCredential) {
+
+        var urlParams = HashMap<String, String>()
+
+
+//        DataManager.fetchTransactionList(urlParams, mCredential, TransactionListListener() { })
+        DataManager.fetchTransactionList(urlParams, mCredential, object : TransactionListListener {
+            override fun onLoadCompleted(transactionListBean: TransactionListBean) {
+
+
+            }
+
+            override fun onLoadFailed(error: String) {
+                Snackbar.make(coordinatorLayout, error, Snackbar.LENGTH_LONG)
+                                        .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show();
+            }
+
+        })
+
+
     }
 
     private fun chooseAccount() {
