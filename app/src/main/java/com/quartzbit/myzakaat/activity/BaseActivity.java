@@ -102,7 +102,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected static final int PROFILE_ACTIVITY = 5;
     protected static final int DEAREST_COUNTRY_ACTIVITY = 6;
 
-
     protected FileOp fop;
 
     protected boolean isBluetoothEnableRequestShown;

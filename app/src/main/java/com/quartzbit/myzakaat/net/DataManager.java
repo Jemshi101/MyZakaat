@@ -6,6 +6,7 @@ import com.quartzbit.myzakaat.model.BasicBean;
 import com.quartzbit.myzakaat.model.PolyPointBean;
 import com.quartzbit.myzakaat.net.WSAsyncTasks.LocationNameTask;
 import com.quartzbit.myzakaat.net.WSAsyncTasks.PolyPointTask;
+import com.quartzbit.myzakaat.net.WSAsyncTasks.TransactionListTask;
 import com.quartzbit.myzakaat.net.WSAsyncTasks.UpdateFCMTokenTask;
 import com.quartzbit.myzakaat.util.AppConstants;
 
@@ -16,6 +17,33 @@ import java.util.HashMap;
 
 public class DataManager {
 
+
+    public static void fetchTransactionList(HashMap<String, String> urlParams, final TransactionListListener listener) {
+
+        TransactionListTask transactionListTask = new TransactionListTask(urlParams);
+        transactionListTask.setTransactionListTaskListener(new TransactionListTask.TransactionListTaskListener() {
+            @Override
+            public void dataDownloadedSuccessfully(TransactionListBean transactionListBean) {
+                if (transactionListBean == null)
+                    listener.onLoadFailed(AppConstants.WEB_ERROR_MSG);
+                else {
+                    if (transactionListBean.getStatus().equalsIgnoreCase("Success")) {
+                        listener.onLoadCompleted(transactionListBean);
+                    } else if (transactionListBean.getStatus().equalsIgnoreCase("Error")) {
+                        listener.onLoadFailed(transactionListBean.getErrorMsg());
+                    } else {
+                        listener.onLoadFailed(AppConstants.WEB_ERROR_MSG);
+                    }
+                }
+            }
+
+            @Override
+            public void dataDownloadFailed() {
+                listener.onLoadFailed(AppConstants.WEB_ERROR_MSG);
+            }
+        });
+        transactionListTask.execute();
+    }
 
     public static void fetchPolyPoints(HashMap<String, String> urlParams, final PolyPointListener listener) {
 
