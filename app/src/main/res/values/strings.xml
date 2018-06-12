@@ -2,8 +2,8 @@
 	
 	<string name="app_name">MyZakaat</string>
 	
-	<string name="api_key">AIzaSyBlCC5zh9AeN2iCOrpY49_wj7VXjb-Q6G8</string>
-	<string name="browser_api_key">AIzaSyAhfT1DGdk2eArijJi8K2GMOvayHS-pK8E</string>
+	<string name="api_key">Google Android API Key</string>
+	<string name="browser_api_key">Google Browser API Key</string>
 	
 	<string name="action_menu">Menu</string>
 	<string name="action_refresh">Refresh</string>
