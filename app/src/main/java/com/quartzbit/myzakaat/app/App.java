@@ -25,10 +25,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import androidx.multidex.MultiDex;
-import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.appcompat.widget.ActionMenuView;
-import androidx.appcompat.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -47,6 +43,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.quartzbit.myzakaat.R;
+import com.quartzbit.myzakaat.config.Config;
+import com.quartzbit.myzakaat.model.AuthBean;
+import com.quartzbit.myzakaat.util.AppConstants;
+import com.quartzbit.myzakaat.util.FileOp;
+import com.quartzbit.myzakaat.util.RobotoTextStyleExtractor;
+import com.quartzbit.myzakaat.util.TypefaceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,16 +67,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.quartzbit.myzakaat.R;
-import com.quartzbit.myzakaat.config.Config;
-import com.quartzbit.myzakaat.model.AuthBean;
-import com.quartzbit.myzakaat.model.ProfileBean;
-import com.quartzbit.myzakaat.model.RecentChatBean;
-import com.quartzbit.myzakaat.model.UserThumbBean;
-import com.quartzbit.myzakaat.util.AppConstants;
-import com.quartzbit.myzakaat.util.FileOp;
-import com.quartzbit.myzakaat.util.RobotoTextStyleExtractor;
-import com.quartzbit.myzakaat.util.TypefaceManager;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
+import androidx.appcompat.widget.Toolbar;
 
 //import com.digits.sdk.android.Digits;
 
@@ -211,7 +207,7 @@ public class App extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
+//        MultiDex.install(this);
     }
 
     @Override
@@ -760,33 +756,6 @@ public class App extends Application {
                 thumb.getWidth(), thumb.getHeight(), matrix, true);
     }
 
-    public static String getChatListID(UserThumbBean userThumbBean) {
-
-        String userID = userThumbBean.getUserID();
-        int difference = userID.compareTo(Config.getInstance().getUserID());
-        if (difference < 0) {
-            return userID + "@_@" + Config.getInstance().getUserID();
-        } else if (difference > 0) {
-            return Config.getInstance().getUserID() + "@_@" + userID;
-        } else {
-            return userID + "@_@" + userID;
-        }
-    }
-
-    public static String getChatListID(RecentChatBean recentChatBean) {
-
-        String userID = recentChatBean.getSenderID().equals(Config.getInstance().getUserID())
-                ? recentChatBean.getReceiverID() : recentChatBean.getSenderID();
-        int difference = userID.compareTo(Config.getInstance().getUserID());
-        if (difference < 0) {
-            return userID + "@_@" + Config.getInstance().getUserID();
-        } else if (difference > 0) {
-            return Config.getInstance().getUserID() + "@_@" + userID;
-        } else {
-            return userID + "@_@" + userID;
-        }
-    }
-
 
     public static String getDeviceID(Context context) {
         String DEVICEID = "";
@@ -832,11 +801,11 @@ public class App extends Application {
         listView.requestLayout();
     }
 
-    public static Locale getCurrentLocale(){
+    public static Locale getCurrentLocale() {
         return new Locale(Config.getInstance().getLocale());
     }
 
-    public static Locale getLocale(String lang){
+    public static Locale getLocale(String lang) {
         return new Locale(lang);
     }
 
@@ -1048,6 +1017,7 @@ public class App extends Application {
         System.out.println("SAVE COMPLETE");
     }
 
+/*
     public static void saveToken(ProfileBean profileBean) {
         Context context = getInstance().getApplicationContext();
         FileOp fileOp = new FileOp(context);
@@ -1081,6 +1051,7 @@ public class App extends Application {
         fileOp.writeHash();
         System.out.println("SAVE COMPLETE");
     }
+*/
 
     public static void saveToken(AuthBean authBean) {
         Context context = getInstance().getApplicationContext();
@@ -1116,6 +1087,7 @@ public class App extends Application {
         System.out.println("SAVE COMPLETE");
     }
 
+/*
     private static void setConfig(ProfileBean profileBean) {
         Config.getInstance().setAuthToken(profileBean.getAuthToken());
         Config.getInstance().setUserID(profileBean.getId());
@@ -1141,6 +1113,7 @@ public class App extends Application {
         }
 
     }
+*/
 
     private static void setConfig(AuthBean authBean) {
         Config.getInstance().setAuthToken(authBean.getAuthToken());

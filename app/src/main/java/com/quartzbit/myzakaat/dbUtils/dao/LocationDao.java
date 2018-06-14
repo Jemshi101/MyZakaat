@@ -1,5 +1,7 @@
 package com.quartzbit.myzakaat.dbUtils.dao;
 
+import com.quartzbit.myzakaat.dbUtils.entity.LocationEntity;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,7 +11,6 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import in.techware.afcetcbus.database.entity.LocationEntity;
 
 /**
  * Created by Jemsheer K D on 13 February, 2018.

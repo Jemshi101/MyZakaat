@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -23,11 +22,13 @@ import java.util.List;
  * Project MyZakaat
  */
 public class TransactionListTask extends AsyncTask<Void, Void, TransactionListBean> {
+    private final HashMap<String, String> urlParams;
     private com.google.api.services.sheets.v4.Sheets mService = null;
     private Exception mLastError = null;
     private TransactionListTaskListener transactionListTaskListener;
 
     public TransactionListTask(HashMap<String, String> urlParams, GoogleAccountCredential credential) {
+        this.urlParams = urlParams;
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         mService = new com.google.api.services.sheets.v4.Sheets.Builder(
@@ -73,6 +74,16 @@ public class TransactionListTask extends AsyncTask<Void, Void, TransactionListBe
             for (List row : values) {
                 TransactionBean transactionBean = new TransactionBean();
                 transactionBean.setId(values.indexOf(row));
+                transactionBean.setDate(transactionBean.dateToMillis(transactionBean.formatDate((String) row.get(0))));
+                transactionBean.setDescription((String) row.get(1));
+                transactionBean.setReference((String) row.get(2));
+                transactionBean.setDebit((Integer) row.get(3));
+                transactionBean.setCredit((Integer) row.get(4));
+                transactionBean.setBalance((Integer) row.get(5));
+                transactionBean.setBankCut((Integer) row.get(6));
+                transactionBean.setRealBalance((Integer) row.get(7));
+                transactionBean.setInterest((Integer) row.get(8));
+                transactionBean.setLowestAmount((Integer) row.get(9));
             }
         }
         return transactionListBean;

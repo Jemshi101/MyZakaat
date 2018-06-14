@@ -17,9 +17,9 @@ public class BasicDataBean extends BaseBean {
     private static final String TAG = "BDBean";
 
     private String versionID;
-    private List<CountryBean> countries;
+   /* private List<CountryBean> countries;
     private List<StateBean> states;
-    private List<ReligionBean> religions;
+    private List<ReligionBean> religions;*/
 
 
     public String getVersionID() {
@@ -30,7 +30,7 @@ public class BasicDataBean extends BaseBean {
         this.versionID = versionID;
     }
 
-    public List<CountryBean> getCountries() {
+ /*   public List<CountryBean> getCountries() {
         return countries;
     }
 
@@ -90,7 +90,7 @@ public class BasicDataBean extends BaseBean {
         return null;
     }
 
-/*    public StateBean getState(String countryID, String stateID) {
+*//*    public StateBean getState(String countryID, String stateID) {
         CountryBean countryBean = getCountry(countryID);
         try {
             for (int i = 0; i < countryBean.getStates().size(); i++) {
@@ -101,7 +101,7 @@ public class BasicDataBean extends BaseBean {
         } catch (Exception e) {
         }
         return null;
-    }*/
+    }*//*
 
     public StateBean getState(String stateID) {
         if (states != null) {
@@ -114,7 +114,7 @@ public class BasicDataBean extends BaseBean {
         return null;
     }
 
-/*    public StateBean getStateFromName(String countryID, String name) {
+*//*    public StateBean getStateFromName(String countryID, String name) {
         CountryBean countryBean = getCountry(countryID);
         try {
             for (int i = 0; i < countryBean.getStates().size(); i++) {
@@ -125,7 +125,7 @@ public class BasicDataBean extends BaseBean {
         } catch (Exception e) {
         }
         return null;
-    }*/
+    }*//*
 
     public StateBean getStateFromName(String countryID, String name) {
         if (states != null) {
@@ -248,5 +248,5 @@ public class BasicDataBean extends BaseBean {
             }
         }
     }
-
+*/
 }

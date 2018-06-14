@@ -16,7 +16,7 @@ open class BasicParser {
         val list = ArrayList<String>()
         if (dataSnapshot.exists()) {
             for (snapshot in dataSnapshot.children) {
-                list.add(snapshot.key)
+                list.add(snapshot.key.toString())
             }
         }
         return list
@@ -42,7 +42,7 @@ open class BasicParser {
         if (dataSnapshot.exists()) {
             for (snapshot in dataSnapshot.children) {
                 try {
-                    map.put(snapshot.key, snapshot.value as Boolean)
+                    map.put(snapshot.key.toString(), snapshot.value as Boolean)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -57,7 +57,7 @@ open class BasicParser {
         if (dataSnapshot.exists()) {
             for (snapshot in dataSnapshot.children) {
                 try {
-                    map.put(snapshot.key, snapshot.value as Int)
+                    map.put(snapshot.key.toString(), snapshot.value as Int)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

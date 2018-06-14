@@ -3,12 +3,13 @@ package com.quartzbit.myzakaat.dbUtils;
 import android.content.Context;
 
 import com.quartzbit.myzakaat.dbUtils.dao.LocationDao;
+import com.quartzbit.myzakaat.dbUtils.entity.BankEntity;
+import com.quartzbit.myzakaat.dbUtils.entity.LocationEntity;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-import in.techware.afcetcbus.database.entity.LocationEntity;
 
 
 /**
@@ -17,7 +18,7 @@ import in.techware.afcetcbus.database.entity.LocationEntity;
  * Project AFS_Bus_App
  */
 
-@Database(entities = {LocationEntity.class}, version = 1)
+@Database(entities = {LocationEntity.class, BankEntity.class}, version = 1)
 @TypeConverters({DataTypeConverters.class})
 public abstract class MyZakaatRoomDatabase extends RoomDatabase {
 

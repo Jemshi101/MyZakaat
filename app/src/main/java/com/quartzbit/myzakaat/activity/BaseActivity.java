@@ -21,10 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,18 +43,9 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.app.App;
 import com.quartzbit.myzakaat.config.Config;
@@ -67,6 +54,18 @@ import com.quartzbit.myzakaat.dialogs.PopupMessage;
 import com.quartzbit.myzakaat.listeners.LocationUpdateListener;
 import com.quartzbit.myzakaat.listeners.PermissionListener;
 import com.quartzbit.myzakaat.util.FileOp;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import io.fabric.sdk.android.Fabric;
 
 //import com.digits.sdk.android.Digits;
@@ -75,8 +74,7 @@ import io.fabric.sdk.android.Fabric;
 
 public abstract class BaseActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMyLocationButtonClickListener, com.google.android.gms.location.LocationListener,
+        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener,
         LocationListener {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
@@ -183,7 +181,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         if (App.getInstance().getGoogleApiClient() == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(App.getInstance().getApplicationContext())
                     .addApi(LocationServices.API)
-                    .enableAutoManage(this, this)
+//                    .enableAutoManage(this, this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
@@ -1063,12 +1061,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         Config.getInstance().setCurrentLongitude("" + location.getLongitude());
 
 
-    }
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-//        Toast.makeText(this, R.string.message_my_location_button_clicked, Toast.LENGTH_SHORT).show();
-        return false;
     }
 
     @Override

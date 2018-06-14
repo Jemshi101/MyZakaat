@@ -1,6 +1,8 @@
 package com.quartzbit.myzakaat.activity
 
 import android.accounts.AccountManager
+
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -18,23 +20,28 @@ import com.quartzbit.myzakaat.app.App
 import com.quartzbit.myzakaat.dialogs.SelectDateDialog
 import com.quartzbit.myzakaat.listeners.PermissionListener
 import com.quartzbit.myzakaat.listeners.TransactionListListener
+import com.quartzbit.myzakaat.model.BankListBean
 import com.quartzbit.myzakaat.model.TransactionListBean
 import com.quartzbit.myzakaat.net.DataManager
 import com.quartzbit.myzakaat.util.AppConstants
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-
 class HomeActivity : BaseAppCompatNoDrawerActivity() {
+
     lateinit var mCredential: GoogleAccountCredential
+    private var transactionListBeanList: ArrayList<TransactionListBean> = ArrayList()
+    private lateinit var bankListBean: BankListBean
 
     val REQUEST_ACCOUNT_PICKER = 1000;
     val REQUEST_AUTHORIZATION = 1001;
-    val REQUEST_GOOGLE_PLAY_SERVICES = 1002;
 
+    val REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     val BUTTON_TEXT = "Call Google Sheets API";
     val PREF_ACCOUNT_NAME = "accountName";
+
     val SCOPES = mutableListOf<String>(SheetsScopes.SPREADSHEETS_READONLY);
 
     private lateinit var selectDateDialog: SelectDateDialog
@@ -56,6 +63,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
             getGetAccountsPermissions()
         }
     }
+
 
     private fun initViews() {
 
@@ -87,40 +95,96 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
     }
 
     private fun getResultsFromApi() {
-        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext)
+        /*if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext)
                 != ConnectionResult.SUCCESS) {
             acquireGooglePlayServices()
-        } else if (mCredential.getSelectedAccountName() == null) {
+        } else */if (mCredential.getSelectedAccountName() == null) {
             chooseAccount()
         } else if (!App.isNetworkAvailable()) {
             Snackbar.make(coordinatorLayout, AppConstants.NO_NETWORK_AVAILABLE, Snackbar.LENGTH_LONG).show()
         } else {
-
-            fetchTransactionList(mCredential)
+            bankListBean = AppConstants.getBankListBean();
+            if (bankListBean.banks.isNotEmpty())
+                fetchTransactionList(0, mCredential)
 
         }
     }
 
-    private fun fetchTransactionList(mCredential: GoogleAccountCredential) {
+    private fun fetchTransactionList(position: Int, mCredential: GoogleAccountCredential) {
 
         var urlParams = HashMap<String, String>()
-
+        var bankBean = bankListBean.banks.get(position)
+        urlParams.put("id", bankBean.id)
+        urlParams.put("range", bankBean.range)
 
 //        DataManager.fetchTransactionList(urlParams, mCredential, TransactionListListener() { })
         DataManager.fetchTransactionList(urlParams, mCredential, object : TransactionListListener {
             override fun onLoadCompleted(transactionListBean: TransactionListBean) {
 
+                transactionListBeanList.add(transactionListBean)
+
+                if (position < bankListBean.banks.size - 1) {
+                    fetchTransactionList(position + 1, mCredential)
+                } else {
+                    processTransactions();
+                }
 
             }
 
             override fun onLoadFailed(error: String) {
                 Snackbar.make(coordinatorLayout, error, Snackbar.LENGTH_LONG)
-                                        .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show();
+                        .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show();
             }
 
         })
 
 
+    }
+
+    private fun processTransactions() {
+
+        var cal: Calendar = Calendar.getInstance();
+        cal.set(2017, Calendar.JUNE, 2)
+
+        txtHomeZakaatStartDate.text = App.getDateFromUnix(App.DATE_FORMAT_4, false,
+                false, cal.timeInMillis, false)
+
+
+        var isFirst = true
+        var currentLowestBalance: Float = Float.MAX_VALUE
+        var currentBalance: Float = 0F
+        var currentInterest: Float = 0F
+        var currentTotalBalance: Float = 0F
+
+        while (cal.equals(Calendar.getInstance())) {
+            var balance = 0F
+            var interest = 0F
+            var totalBalance = 0F
+            for (transactionListBean in transactionListBeanList) {
+                var transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
+                balance += transactionBean.realBalance
+                interest += transactionBean.interest
+                totalBalance += transactionBean.balance
+            }
+            if (isFirst) {
+                currentLowestBalance = balance
+                isFirst = false
+            }
+            if (balance < currentLowestBalance) {
+                currentLowestBalance = balance
+            }
+            currentBalance = balance
+            currentInterest = interest
+            currentTotalBalance = totalBalance
+            cal.add(Calendar.DATE, 1)
+        }
+
+        txtHomeCurrentBalance.text = currentBalance.toString()
+        txtHomeInterest.text = currentInterest.toString()
+        txtHomeTotalBalance.text = currentTotalBalance.toString()
+        txtHomeLowestAmount.text = currentLowestBalance.toString()
+        var zakaat: Float = (currentLowestBalance * 2.5 / 100).toFloat()
+        txtHomeZakaatAmount.text = zakaat.toString()
     }
 
     private fun chooseAccount() {
@@ -164,7 +228,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
             }
             REQUEST_AUTHORIZATION -> if (resultCode == Activity.RESULT_OK) {
                 getResultsFromApi()
-            }
+            }/**/
         }
     }
 
@@ -175,7 +239,6 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
             showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
         }
     }
-
 
     fun showGooglePlayServicesAvailabilityErrorDialog(
             connectionStatusCode: Int) {

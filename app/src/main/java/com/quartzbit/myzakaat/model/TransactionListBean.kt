@@ -16,14 +16,27 @@ class TransactionListBean : BaseBean() {
     fun getTransactionsOfDate(dateInMillis: Long): ArrayList<TransactionBean> {
         var list = ArrayList<TransactionBean>()
 
-        for(bean in transactions){
-            if(bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
-                            false, dateInMillis, false)){
-
+        for (bean in transactions) {
+            if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
+                            false, dateInMillis, false)) {
+                list.add(bean)
             }
         }
 
         return list
+    }
+
+    fun getLastTransactionOfDate(dateInMillis: Long): TransactionBean {
+        var list = ArrayList<TransactionBean>()
+
+
+        for (bean in transactions) {
+            if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
+                            false, dateInMillis, false)) {
+            }
+        }
+
+        return list.last()
     }
 
 

@@ -1,9 +1,5 @@
 package com.quartzbit.myzakaat.firebase.firebaseParsers;
 
-import com.google.firebase.database.DataSnapshot;
-
-import com.quartzbit.myzakaat.model.RequestBean;
-
 /**
  * Created by Jemsheer K D on 23 November, 2017.
  * Package com.quartzbit.myzakaat.firebase.firebaseParsers
@@ -12,7 +8,7 @@ import com.quartzbit.myzakaat.model.RequestBean;
 
 public class RequestParser extends BasicParser {
 
-    public RequestBean getRequest(DataSnapshot dataSnapshot) {
+   /* public RequestBean getRequest(DataSnapshot dataSnapshot) {
         if (dataSnapshot.exists()) {
             RequestBean requestBean = new RequestBean();
             requestBean.setId(getString(dataSnapshot, "id"));
@@ -35,5 +31,5 @@ public class RequestParser extends BasicParser {
         } else {
             return null;
         }
-    }
+    }*/
 }

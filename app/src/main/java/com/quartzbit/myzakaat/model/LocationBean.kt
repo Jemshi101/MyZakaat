@@ -1,4 +1,4 @@
-package `com`.quartzbit.myzakaat.model
+package com.quartzbit.myzakaat.model
 
 import com.google.android.gms.maps.model.LatLng
 

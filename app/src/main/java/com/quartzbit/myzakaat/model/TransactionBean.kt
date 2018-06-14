@@ -17,13 +17,13 @@ class TransactionBean : BaseBean() {
     var date: Long = 0
     var description: String = ""
     var reference: String = ""
-    var debit: Int = 0
-    var credit: Int = 0
-    var balance: Int = 0
-    var bankCut: Int = 0
-    var realBalance: Int = 0
-    var interest: Int = 0
-    var lowestAmount: Int = 0
+    var debit: Float = 0F
+    var credit: Float = 0F
+    var balance: Float  = 0F
+    var bankCut: Float = 0F
+    var realBalance: Float = 0F
+    var interest: Float = 0F
+    var lowestAmount: Float = 0F
 
     fun formatDate(date: String): String {
         val index = if (!date.contains("\n(")) date.indexOf("(") else date.indexOf("\n(")
