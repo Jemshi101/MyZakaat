@@ -7,6 +7,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.View
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.Snackbar
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
