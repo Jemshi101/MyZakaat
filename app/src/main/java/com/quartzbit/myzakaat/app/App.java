@@ -39,9 +39,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.config.Config;
@@ -108,7 +105,6 @@ public class App extends Application {
     int width;
     int height;
 
-    private DatabaseReference firebaseDB;
     private GoogleApiClient googleApiClient;
 
     private boolean isDemo;
@@ -119,14 +115,6 @@ public class App extends Application {
 
     public void setDemo(boolean demo) {
         isDemo = demo;
-    }
-
-    public DatabaseReference getFirebaseDB() {
-        return firebaseDB;
-    }
-
-    public void setFirebaseDB(DatabaseReference firebaseDB) {
-        this.firebaseDB = firebaseDB;
     }
 
     public GoogleApiClient getGoogleApiClient() {
@@ -216,7 +204,7 @@ public class App extends Application {
 
         instance = this;
 
-        firebaseDB = FirebaseDatabase.getInstance().getReference();
+//        firebaseDB = FirebaseDatabase.getInstance().getReference();
 //        FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -953,8 +941,8 @@ public class App extends Application {
         boolean isRegistrationCompleted = prfs.getBoolean(AppConstants.PREFERENCE_IS_REGISTRATION_COMPLETED, false);
 */
         Log.i(TAG, "checkForToken: " + prfs.getAll());
-//        if (!"".equals(token)) {
-        if (!userID.equals("") && FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (!"".equals(token)) {
+//        if (!userID.equals("") && FirebaseAuth.getInstance().getCurrentUser() != null) {
             Config.getInstance().setAuthToken(token);
             Config.getInstance().setUserID(userID);
             Config.getInstance().setFcmID(fcmID);
@@ -1153,7 +1141,7 @@ public class App extends Application {
 
 //        new DBHandler(context).clearDatabase();
 //        Digits.logout();
-        FirebaseAuth.getInstance().signOut();
+//        FirebaseAuth.getInstance().signOut();
         clearApplicationData(context);
 //        restart(context, 500);
 

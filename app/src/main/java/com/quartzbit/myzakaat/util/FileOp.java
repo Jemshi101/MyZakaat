@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 
@@ -527,14 +526,15 @@ public class FileOp {
             try {
                 android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
             } catch (Exception e) {
-                try {
-                    android_id = AdvertisingIdClient.getAdvertisingIdInfo(context.getApplicationContext()).getId();
+//                try {
+//                    android_id = AdvertisingIdClient.getAdvertisingIdInfo(context.getApplicationContext()).getId();
+                    android_id = "";
                     System.out.println("ANDROID_ID NOT AVAILABLE");
-                } catch (IOException |
-                        GooglePlayServicesNotAvailableException |
-                        GooglePlayServicesRepairableException | IllegalStateException e1) {
-                    e1.printStackTrace();
-                }
+//                } catch (IOException |
+//                        GooglePlayServicesNotAvailableException |
+//                        GooglePlayServicesRepairableException | IllegalStateException e1) {
+//                    e1.printStackTrace();
+//                }
                 e.printStackTrace();
             }
             String device_id = null;

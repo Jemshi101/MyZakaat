@@ -26,7 +26,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.app.App;
 import com.quartzbit.myzakaat.config.Config;
@@ -292,13 +291,8 @@ public class BaseAppCompatActivity extends BaseActivity {
         }
 
        */
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            if (App.isNetworkAvailable()) {
-                fetchProfile(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            }
-        }
 
-        setBottomBarSelection();
+//        setBottomBarSelection();
 
     }
 
@@ -473,7 +467,7 @@ public class BaseAppCompatActivity extends BaseActivity {
     }
 */
 
-    private void setBottomBarSelection() {
+   /* private void setBottomBarSelection() {
 
         switch (getCurrentActivity()) {
             case HOME_ACTIVITY:
@@ -496,7 +490,7 @@ public class BaseAppCompatActivity extends BaseActivity {
                 break;
         }
 
-    }
+    }*/
 
 
     public void onLogoutClick(View v) {

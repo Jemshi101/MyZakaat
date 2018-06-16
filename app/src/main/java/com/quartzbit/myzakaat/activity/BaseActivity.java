@@ -44,8 +44,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.app.App;
 import com.quartzbit.myzakaat.config.Config;
@@ -166,7 +164,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private boolean isRequestingLocationUpdates;
     private ArrayList<LocationUpdateListener> locationUpdateListeners = new ArrayList<>();
     private ArrayList<PermissionListener> permissionListeners = new ArrayList<>();
-    private DatabaseReference mDatabase;
 
 
     protected void initBase() {
@@ -211,7 +208,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
 //        Fabric.with(this, new Crashlytics());
 //        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Crashlytics()/*, new TwitterCore(authConfig), new Digits.Builder().build()*/);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         //	getActionBar().setHomeButtonEnabled(true);
@@ -321,10 +317,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         if (isRequestingLocationUpdates) {
             getCurrentLocation();
         }
-
-        if (Config.getInstance().getUserID() != null && !Config.getInstance().getUserID().equals("")) {
-            mDatabase.child("user_thumb").child(Config.getInstance().getUserID()).child("online").setValue(true);
-        }
     }
 
     @Override
@@ -336,9 +328,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        if (Config.getInstance().getUserID() != null && !Config.getInstance().getUserID().equals("")) {
-            mDatabase.child("user_thumb").child(Config.getInstance().getUserID()).child("online").setValue(false);
-        }
     }
 
     int getCurrentActivity() {
@@ -967,7 +956,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
-                    .enableAutoManage(this, this)
+//                    .enableAutoManage(this, this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();

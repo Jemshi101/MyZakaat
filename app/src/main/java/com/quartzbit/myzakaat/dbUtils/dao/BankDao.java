@@ -18,7 +18,7 @@ import androidx.room.Update;
  */
 
 @Dao
-public interface BankDaoDao {
+public interface BankDao {
 
     @Query("SELECT * FROM bank")
     List<BankEntity> loadAllBanks();
