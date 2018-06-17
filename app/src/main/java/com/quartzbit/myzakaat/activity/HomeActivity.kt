@@ -7,15 +7,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.View
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.util.ExponentialBackOff
-import com.google.gson.Gson
 import com.quartzbit.myzakaat.R
 import com.quartzbit.myzakaat.app.App
 import com.quartzbit.myzakaat.dialogs.SelectDateDialog
@@ -25,16 +24,17 @@ import com.quartzbit.myzakaat.model.BankListBean
 import com.quartzbit.myzakaat.model.TransactionListBean
 import com.quartzbit.myzakaat.net.DataManager
 import com.quartzbit.myzakaat.util.AppConstants
+import com.quartzbit.myzakaat.util.TransactionUtil
+import com.quartzbit.myzakaat.util.TransactionUtil.TransactionUtilListener
+import com.quartzbit.myzakaat.viewModels.HomeViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 import java.lang.Exception
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     lateinit var mCredential: GoogleAccountCredential
-    private var transactionListBeanList: ArrayList<TransactionListBean> = ArrayList()
     private lateinit var bankListBean: BankListBean
 
     val REQUEST_ACCOUNT_PICKER = 1000;
@@ -49,15 +49,32 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     private lateinit var selectDateDialog: SelectDateDialog
 
-    private var zakaatStartDate: Calendar = Calendar.getInstance()
+    private lateinit var mViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        mViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+
         initViews()
+        populateHome()
         setTitle(R.string.app_name, R.color.white)
 
+
+    }
+
+    private fun populateHome() {
+
+        txtHomeCurrentBalance.text = mViewModel.currentBalance.toString()
+        txtHomeInterest.text = mViewModel.currentInterest.toString()
+        txtHomeTotalBalance.text = mViewModel.currentTotalBalance.toString()
+        txtHomeLowestAmount.text = mViewModel.currentLowestBalance.toString()
+        val zakaat: Float = (mViewModel.currentLowestBalance * 2.5 / 100).toFloat()
+        txtHomeZakaatAmount.text = zakaat.toString()
+
+        txtHomeZakaatStartDate.text = App.getDateFromUnix(App.DATE_FORMAT_5, false,
+                false, mViewModel.zakaatStartDate.timeInMillis, false)
 
     }
 
@@ -68,6 +85,11 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         } else {
             getGetAccountsPermissions()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        TransactionUtil.cancelProcessingIfRunning()
     }
 
 
@@ -136,7 +158,11 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
             override fun onLoadCompleted(transactionListBean: TransactionListBean) {
 
-                transactionListBeanList.add(transactionListBean)
+                if (mViewModel.transactionListBeanList.size - 1 < position)
+                    mViewModel.transactionListBeanList.add(transactionListBean)
+                else {
+                    mViewModel.transactionListBeanList.set(position, transactionListBean)
+                }
 
                 if (position < bankListBean.banks.size - 1) {
                     fetchTransactionList(position + 1, mCredential)
@@ -158,26 +184,49 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     private fun processTransactions() {
 
-        var cal: Calendar = Calendar.getInstance();
-        cal.set(2017, Calendar.JUNE, 2)
+        TransactionUtil.processTransactions(mViewModel, object : TransactionUtilListener {
+            override fun actionCompletedSuccessfully(mViewModel: HomeViewModel) {
+                this@HomeActivity.mViewModel = mViewModel
+                runOnUiThread(Runnable {
+                    populateHome()
+                })
+            }
 
+            override fun publishProgress(mViewModel: HomeViewModel) {
+                this@HomeActivity.mViewModel = mViewModel
+                runOnUiThread(Runnable {
+                    populateHome()
+                })
+            }
+
+            override fun actionFailed(errorMsg: String) {
+                Snackbar.make(coordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener)
+            }
+        })
+
+
+        /* var cal: Calendar = Calendar.getInstance();
+         cal.set(2017, Calendar.JUNE, 2)*/
+/*
+        var cal = mViewModel.zakaatStartDate
         txtHomeZakaatStartDate.text = App.getDateFromUnix(App.DATE_FORMAT_4, false,
                 false, cal.timeInMillis, false)
 
 
-        var isFirst = true
-        var currentLowestBalance: Float = Float.MAX_VALUE
-        var currentBalance: Float = 0F
-        var currentInterest: Float = 0F
-        var currentTotalBalance: Float = 0F
+        mViewModel.isFirst = true
+        mViewModel.currentLowestBalance = Float.MAX_VALUE
+        mViewModel.currentBalance = 0F
+        mViewModel.currentInterest = 0F
+        mViewModel.currentTotalBalance = 0F
 
         while (!DateUtils.isToday(cal.timeInMillis)) {
-            Log.i(TAG, "DATE : "+App.getDateFromUnix(App.DATE_FORMAT_4, false,
+            Log.i(TAG, "DATE : " + App.getDateFromUnix(App.DATE_FORMAT_4, false,
                     false, cal.timeInMillis, false))
             var balance = 0F
             var interest = 0F
             var totalBalance = 0F
-            for (transactionListBean in transactionListBeanList) {
+            for (transactionListBean in mViewModel.transactionListBeanList) {
                 var transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
                 Log.i(TAG, "process : transactionBean : " + Gson().toJson(transactionBean))
                 if (transactionBean != null) {
@@ -186,24 +235,25 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
                     totalBalance += transactionBean.balance
                 }
             }
-            if (isFirst) {
-                currentLowestBalance = balance
-                isFirst = false
-            } else if (balance < currentLowestBalance) {
-                currentLowestBalance = balance
+            if (mViewModel.isFirst) {
+                mViewModel.currentLowestBalance = balance
+                mViewModel.isFirst = false
+            } else if (balance < mViewModel.currentLowestBalance) {
+                mViewModel.currentLowestBalance = balance
             }
-            currentBalance = balance
-            currentInterest = interest
-            currentTotalBalance = totalBalance
+            mViewModel.currentBalance = balance
+            mViewModel.currentInterest = interest
+            mViewModel.currentTotalBalance = totalBalance
             cal.add(Calendar.DATE, 1)
         }
 
-        txtHomeCurrentBalance.text = currentBalance.toString()
+        populateHome()*/
+        /*txtHomeCurrentBalance.text = currentBalance.toString()
         txtHomeInterest.text = currentInterest.toString()
         txtHomeTotalBalance.text = currentTotalBalance.toString()
         txtHomeLowestAmount.text = currentLowestBalance.toString()
         var zakaat: Float = (currentLowestBalance * 2.5 / 100).toFloat()
-        txtHomeZakaatAmount.text = zakaat.toString()
+        txtHomeZakaatAmount.text = zakaat.toString()*/
     }
 
     private fun chooseAccount() {
@@ -284,8 +334,8 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         selectDateDialog = SelectDateDialog(this)
         selectDateDialog.selectDateDialogActionListener = object : SelectDateDialog.SelectDateDialogActionListener {
             override fun actionCompletedSuccessfully(cal: Calendar) {
-                zakaatStartDate = cal
-                var date: String = App.getDateFromUnix(App.DATE_FORMAT_1, false,
+                mViewModel.zakaatStartDate = cal
+                var date: String = App.getDateFromUnix(App.DATE_FORMAT_5, false,
                         false, cal.timeInMillis, false)
                 txtHomeZakaatStartDate.text = date
                 chooseAccount()

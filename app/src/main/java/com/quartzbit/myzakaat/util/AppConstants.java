@@ -93,12 +93,12 @@ public class AppConstants {
 
     public static final String BANK_MY_SBI = "1ziNJFrjbc_UoaZLQqS2Gd2jPCjLc9ugPcE4C7qgg3f4";
     public static final String BANK_MY_CURRENT = "1aNCTQRSKiowYTRliPE5PcC8ByPoUF22FeiK7Tn8nnn4";
-    public static final String BANK_SALARY_SBI = "e2";
+    public static final String BANK_SALARY_SBI = "1ksJMHV9DPQzo7Q_U5mvsQCcxe7c7T7h09993FlnHmHA";
     public static final String BANK_SALARY_AXIS = "e2";
 
     public static final String RANGE_MY_SBI = "A22:J";
     public static final String RANGE_MY_CURRENT = "A19:J";
-    public static final String RANGE_SALARY_SBI = "Class Data!A22:J";
+    public static final String RANGE_SALARY_SBI = "A19:J";
     public static final String RANGE_SALARY_AXIS = "Class Data!A22:J";
 
     public static final int MEDIA_TYPE_PHOTO = 0;
@@ -125,8 +125,16 @@ public class AppConstants {
         bankBean.setRange(RANGE_MY_CURRENT);
 
         bankListBean.getBanks().add(bankBean);
-/*
         bankBean =new BankBean();
+        bankBean.setId(BANK_MY_SBI);
+        bankBean.setAccountName("SALARY SBI");
+        bankBean.setAccountNumber("52210012716");
+        bankBean.setBankName("State Bank Of India");
+        bankBean.setRange(RANGE_MY_SBI);
+
+        bankListBean.getBanks().add(bankBean);
+
+       /* bankBean =new BankBean();
         bankBean.setId(BANK_MY_SBI);
         bankBean.setAccountName("MY SBI");
         bankBean.setAccountNumber("31150513805");
@@ -134,16 +142,7 @@ public class AppConstants {
         bankBean.setRange(RANGE_MY_SBI);
 
         bankListBean.getBanks().add(bankBean);
-
-        bankBean =new BankBean();
-        bankBean.setId(BANK_MY_SBI);
-        bankBean.setAccountName("MY SBI");
-        bankBean.setAccountNumber("31150513805");
-        bankBean.setBankName("State Bank Of India");
-        bankBean.setRange(RANGE_MY_SBI);
-
-        bankListBean.getBanks().add(bankBean);*/
-
+*/
         return  bankListBean;
 
     }
