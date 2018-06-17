@@ -13,15 +13,15 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.Calendar;
-
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.config.Config;
 import com.quartzbit.myzakaat.config.TypefaceCache;
 import com.quartzbit.myzakaat.model.BasicDataBean;
 import com.quartzbit.myzakaat.util.AppConstants;
 import com.quartzbit.myzakaat.util.FileOp;
+
+import java.util.Arrays;
+import java.util.Calendar;
 
 /**
  * Created by Jemsheer K D on 05 December, 2016.
@@ -83,7 +83,7 @@ public class SelectDialog {
         } else {
             basicDataBean = new FileOp(mContext.getApplicationContext()).readBasicDataBean();
         }
-        if(basicDataBean==null){
+        if (basicDataBean == null) {
             return;
         }
 
@@ -130,7 +130,7 @@ public class SelectDialog {
             else
                 adapter.notifyDataSetChanged();
             lvSelect.setAdapter(adapter);
-        }else if (AppConstants.ACTION_CHOOSE_CAUSE_OF_DEATH.equals(action)) {
+        } else if (AppConstants.ACTION_CHOOSE_CAUSE_OF_DEATH.equals(action)) {
             choiceList = mContext.getResources().getStringArray(R.array.cause_of_death);
             System.out.println(Arrays.toString(choiceList));
             if (adapter == null)
@@ -149,7 +149,7 @@ public class SelectDialog {
             else
                 adapter.notifyDataSetChanged();
             lvSelect.setAdapter(adapter);
-        }else if (AppConstants.ACTION_CHOOSE_RELIGION.equals(action)) {
+        }/*else if (AppConstants.ACTION_CHOOSE_RELIGION.equals(action)) {
             choiceList = new String[basicDataBean.getReligions().size()];
             for (int i = 0; i < basicDataBean.getReligions().size(); i++) {
                 choiceList[i] = basicDataBean.getReligions().get(i).getName();
@@ -160,7 +160,7 @@ public class SelectDialog {
             else
                 adapter.notifyDataSetChanged();
             lvSelect.setAdapter(adapter);
-        }/* else if (AppConstants.ACTION_CHOOSE_DAY.equals(action)) {
+        }*//* else if (AppConstants.ACTION_CHOOSE_DAY.equals(action)) {
             choiceList = mContext.getResources().getStringArray(R.array.day);
             System.out.println(Arrays.toString(choiceList));
             if (adapter == null)
@@ -196,7 +196,7 @@ public class SelectDialog {
                 choiceList[i] = interestList.get(i).getHeight();
             }
             lvSelect.setAdapter(new SelectAdapter());
-        }*/ else if (AppConstants.ACTION_CHOOSE_COUNTRY.equals(action)) {
+        }*//* else if (AppConstants.ACTION_CHOOSE_COUNTRY.equals(action)) {
             choiceList = new String[basicDataBean.getCountries().size()];
             for (int i = 0; i < basicDataBean.getCountries().size(); i++) {
                 choiceList[i] = basicDataBean.getCountries().get(i).getName();
@@ -207,7 +207,7 @@ public class SelectDialog {
             else
                 adapter.notifyDataSetChanged();
             lvSelect.setAdapter(adapter);
-        } /*else if (AppConstants.ACTION_CHOOSE_STATE.equals(action)) {
+        } *//*else if (AppConstants.ACTION_CHOOSE_STATE.equals(action)) {
             if (basicDataBean.getCountry(ID).getStates() != null) {
                 choiceList = new String[basicDataBean.getCountry(ID).getStates().size()];
                 for (int i = 0; i < basicDataBean.getCountry(ID).getStates().size(); i++) {
@@ -233,7 +233,7 @@ public class SelectDialog {
             else
                 adapter.notifyDataSetChanged();
             lvSelect.setAdapter(adapter);
-        } */ else if (AppConstants.ACTION_CHOOSE_STATE.equals(action)) {
+        } */ /*else if (AppConstants.ACTION_CHOOSE_STATE.equals(action)) {
             if (basicDataBean.getStateList(ID) != null) {
                 choiceList = new String[basicDataBean.getStateList(ID).size()];
                 for (int i = 0; i < basicDataBean.getStateList(ID).size(); i++) {
@@ -246,7 +246,7 @@ public class SelectDialog {
             else
                 adapter.notifyDataSetChanged();
             lvSelect.setAdapter(adapter);
-        } /*else if (AppConstants.ACTION_CHOOSE_DISTRICT.equals(action)) {
+        } *//*else if (AppConstants.ACTION_CHOOSE_DISTRICT.equals(action)) {
             if (basicDataBean.getDistrictList(ID) != null) {
                 choiceList = new String[basicDataBean.getDistrictList(ID).size()];
                 for (int i = 0; i < basicDataBean.getDistrictList(ID).size(); i++) {

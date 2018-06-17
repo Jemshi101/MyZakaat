@@ -1,9 +1,13 @@
 package com.quartzbit.myzakaat.net;
 
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.quartzbit.myzakaat.listeners.BasicListener;
 import com.quartzbit.myzakaat.listeners.PolyPointListener;
+import com.quartzbit.myzakaat.listeners.TransactionListListener;
 import com.quartzbit.myzakaat.model.BasicBean;
 import com.quartzbit.myzakaat.model.PolyPointBean;
+import com.quartzbit.myzakaat.model.TransactionListBean;
 import com.quartzbit.myzakaat.net.WSAsyncTasks.LocationNameTask;
 import com.quartzbit.myzakaat.net.WSAsyncTasks.PolyPointTask;
 import com.quartzbit.myzakaat.net.WSAsyncTasks.TransactionListTask;
@@ -18,9 +22,11 @@ import java.util.HashMap;
 public class DataManager {
 
 
-    public static void fetchTransactionList(HashMap<String, String> urlParams, final TransactionListListener listener) {
+    public static void fetchTransactionList(
+            HashMap<String, String> urlParams,
+            GoogleAccountCredential mCredential, final TransactionListListener listener) {
 
-        TransactionListTask transactionListTask = new TransactionListTask(urlParams);
+        TransactionListTask transactionListTask = new TransactionListTask(urlParams, mCredential);
         transactionListTask.setTransactionListTaskListener(new TransactionListTask.TransactionListTaskListener() {
             @Override
             public void dataDownloadedSuccessfully(TransactionListBean transactionListBean) {
@@ -40,6 +46,16 @@ public class DataManager {
             @Override
             public void dataDownloadFailed() {
                 listener.onLoadFailed(AppConstants.WEB_ERROR_MSG);
+            }
+
+            @Override
+            public void onCancelled(Exception mLastError) {
+                listener.onLoadFailed(mLastError);
+            }
+
+            @Override
+            public void onPermissionError(UserRecoverableAuthIOException e) {
+                listener.onLoadFailed(e);
             }
         });
         transactionListTask.execute();

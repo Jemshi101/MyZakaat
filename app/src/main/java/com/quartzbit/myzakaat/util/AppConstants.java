@@ -2,6 +2,8 @@ package com.quartzbit.myzakaat.util;
 
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.app.App;
+import com.quartzbit.myzakaat.model.BankBean;
+import com.quartzbit.myzakaat.model.BankListBean;
 import com.quartzbit.myzakaat.net.ServiceNames;
 
 public class AppConstants {
@@ -89,8 +91,62 @@ public class AppConstants {
     public static final String EXTRA_KEY_IMAGE_URI = "extra_key_image_uri";
     public static final String EXTRA_KEY_EFFECT = "e2";
 
+    public static final String BANK_MY_SBI = "1ziNJFrjbc_UoaZLQqS2Gd2jPCjLc9ugPcE4C7qgg3f4";
+    public static final String BANK_MY_CURRENT = "1aNCTQRSKiowYTRliPE5PcC8ByPoUF22FeiK7Tn8nnn4";
+    public static final String BANK_SALARY_SBI = "e2";
+    public static final String BANK_SALARY_AXIS = "e2";
+
+    public static final String RANGE_MY_SBI = "A22:J";
+    public static final String RANGE_MY_CURRENT = "A19:J";
+    public static final String RANGE_SALARY_SBI = "Class Data!A22:J";
+    public static final String RANGE_SALARY_AXIS = "Class Data!A22:J";
+
     public static final int MEDIA_TYPE_PHOTO = 0;
     public static final int MEDIA_TYPE_VIDEO = 1;
+
+
+    public static BankListBean getBankListBean(){
+
+        BankListBean bankListBean =new BankListBean();
+        BankBean bankBean =new BankBean();
+        bankBean.setId(BANK_MY_SBI);
+        bankBean.setAccountName("MY SBI");
+        bankBean.setAccountNumber("31150513805");
+        bankBean.setBankName("State Bank Of India");
+        bankBean.setRange(RANGE_MY_SBI);
+
+        bankListBean.getBanks().add(bankBean);
+
+        bankBean =new BankBean();
+        bankBean.setId(BANK_MY_CURRENT);
+        bankBean.setAccountName("MY CURRENT");
+        bankBean.setAccountNumber("36500638051");
+        bankBean.setBankName("State Bank Of India");
+        bankBean.setRange(RANGE_MY_CURRENT);
+
+        bankListBean.getBanks().add(bankBean);
+/*
+        bankBean =new BankBean();
+        bankBean.setId(BANK_MY_SBI);
+        bankBean.setAccountName("MY SBI");
+        bankBean.setAccountNumber("31150513805");
+        bankBean.setBankName("State Bank Of India");
+        bankBean.setRange(RANGE_MY_SBI);
+
+        bankListBean.getBanks().add(bankBean);
+
+        bankBean =new BankBean();
+        bankBean.setId(BANK_MY_SBI);
+        bankBean.setAccountName("MY SBI");
+        bankBean.setAccountNumber("31150513805");
+        bankBean.setBankName("State Bank Of India");
+        bankBean.setRange(RANGE_MY_SBI);
+
+        bankListBean.getBanks().add(bankBean);*/
+
+        return  bankListBean;
+
+    }
 
 
 }

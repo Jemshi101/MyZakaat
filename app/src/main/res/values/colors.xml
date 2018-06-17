@@ -109,7 +109,7 @@
     <color name="green_sticker_circle">#2bada5</color>
     <color name="green_gallery_circle">#92ca3a</color>
     <color name="orange_event_circle">#f1912a</color>
-    
+
     <color name="orange_dark">#D44819</color>
 
 
@@ -147,13 +147,13 @@
     <!-- A really bright Holo shade of gray -->
     <color name="holo_gray_bright">#33CCCCCC</color>
     <color name="chocolate">#424242</color>
-    
+
     <color name="cream_light">#f1eeda</color>
     <color name="cream_1">#F6F2E9</color>
-    
+
     <color name="circle_active">#474747</color>
     <color name="circle_inactive">#ACACAC</color>
-    
+
     <color name="map_path">#48D0ED</color>
 
     <color name="bg_gradient_start">#F4821C</color>

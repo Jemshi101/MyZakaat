@@ -2,22 +2,9 @@ package com.quartzbit.myzakaat.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
@@ -36,28 +23,29 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.quartzbit.myzakaat.R;
+import com.quartzbit.myzakaat.app.App;
+import com.quartzbit.myzakaat.config.Config;
+import com.quartzbit.myzakaat.model.BasicBean;
+import com.quartzbit.myzakaat.net.WSAsyncTasks.LocationNameTask;
+import com.quartzbit.myzakaat.widgets.CustomTextView;
+import com.quartzbit.myzakaat.widgets.TextViewWithImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import com.quartzbit.myzakaat.R;
-import com.quartzbit.myzakaat.app.App;
-import com.quartzbit.myzakaat.config.Config;
-import com.quartzbit.myzakaat.firebase.FirebaseDataManager;
-import com.quartzbit.myzakaat.listeners.LocationUpdateListener;
-import com.quartzbit.myzakaat.listeners.PermissionListener;
-import com.quartzbit.myzakaat.listeners.ProfileListener;
-import com.quartzbit.myzakaat.model.BasicBean;
-import com.quartzbit.myzakaat.model.ProfileBean;
-import com.quartzbit.myzakaat.net.WSAsyncTasks.LocationNameTask;
-import com.quartzbit.myzakaat.widgets.CustomTextView;
-import com.quartzbit.myzakaat.widgets.TextViewWithImage;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class BaseAppCompatActivity extends BaseActivity {
     private static final String TAG = "BaseAppCompatActivity";
@@ -87,7 +75,7 @@ public class BaseAppCompatActivity extends BaseActivity {
     private ImageView ivMessage;
 
     private ImageView ivUserDP;
-    private ProfileBean profileBean;
+    //    private ProfileBean profileBean;
     private CustomTextView txtName;
     private CustomTextView txtEmail;
 
@@ -113,35 +101,6 @@ public class BaseAppCompatActivity extends BaseActivity {
 
 //        FacebookSdk.sdkInitialize(this.getApplicationContext());
 
-        LocationUpdateListener locationUpdateListener = new LocationUpdateListener() {
-            @Override
-            public void onLocationUpdated(Location location) {
-                if (Config.getInstance().isOnline()
-                        && (Config.getInstance().getDCurrentLatitude() == 0.0
-                        || Config.getInstance().getDCurrentLatitude() == location.getLatitude())
-                        && (Config.getInstance().getDCurrentLongitude() == 0.0
-                        || Config.getInstance().getDCurrentLongitude() == location.getLongitude())) {
-
-//            performDriverLocationUpdate(location);
-                }
-            }
-        };
-        addLocationUpdateListener(locationUpdateListener);
-
-        PermissionListener permissionListener = new PermissionListener() {
-            @Override
-            public void onPermissionCheckCompleted(int requestCode, boolean isPermissionGranted) {
-                if (requestCode == REQUEST_PERMISSIONS_LOCATION) {
-                    if (isPermissionGranted) {
-                        if (checkLocationSettingsStatus()) {
-                            getCurrentLocation();
-                        }
-                    }
-                }
-            }
-        };
-        addPermissionListener(permissionListener);
-
 
         lytContent = (FrameLayout) findViewById(R.id.lyt_contents_appcompat);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorlayout_base_appcompat);
@@ -162,7 +121,7 @@ public class BaseAppCompatActivity extends BaseActivity {
 
         //leftDrawer = (FrameLayout) findViewById(R.id.leftDrawer);
         leftDrawer = (NavigationView) findViewById(R.id.navigation_view_base_appcompat);
-        bottomBar = (BottomNavigationView) findViewById(R.id.bottom_navigation_base_appcompat);
+//        bottomBar = (BottomNavigationView) findViewById(R.id.bottom_navigation_base_appcompat);
         //	rightDrawer = (FrameLayout)findViewById(R.id.rightDrawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_appcompat);
 
@@ -234,9 +193,9 @@ public class BaseAppCompatActivity extends BaseActivity {
          */
         //	setupRightDrawer();
         setLeftDrawer();
-        setBottomBar();
-        setUser();
-        disableShiftMode(bottomBar);
+//        setBottomBar();
+//        setUser();
+//        disableShiftMode(bottomBar);
         /*		mHandler.postDelayed(notiNotiTask, 1000);
         mHandler.postDelayed(notiReqTask, 2000);*/
 
@@ -300,13 +259,8 @@ public class BaseAppCompatActivity extends BaseActivity {
         }
 
        */
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            if (App.isNetworkAvailable()) {
-                fetchProfile(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            }
-        }
 
-        setBottomBarSelection();
+//        setBottomBarSelection();
 
     }
 
@@ -435,6 +389,7 @@ public class BaseAppCompatActivity extends BaseActivity {
 
     }
 
+/*
     private void setBottomBar() {
 
         bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -478,8 +433,9 @@ public class BaseAppCompatActivity extends BaseActivity {
         });
 
     }
+*/
 
-    private void setBottomBarSelection() {
+   /* private void setBottomBarSelection() {
 
         switch (getCurrentActivity()) {
             case HOME_ACTIVITY:
@@ -502,7 +458,7 @@ public class BaseAppCompatActivity extends BaseActivity {
                 break;
         }
 
-    }
+    }*/
 
 
     public void onLogoutClick(View v) {
@@ -538,8 +494,8 @@ public class BaseAppCompatActivity extends BaseActivity {
 //        mVibrator.vibrate(25);
 
 //        drawerLayout.closeDrawers();
-        startActivity(new Intent(BaseAppCompatActivity.this, ProfileViewActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+        /*startActivity(new Intent(BaseAppCompatActivity.this, ProfileViewActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));*/
 //        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 //        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 
@@ -600,7 +556,7 @@ public class BaseAppCompatActivity extends BaseActivity {
 
     }
 
-    public static void disableShiftMode(BottomNavigationView view) {
+   /* public static void disableShiftMode(BottomNavigationView view) {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
         try {
             Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
@@ -621,7 +577,7 @@ public class BaseAppCompatActivity extends BaseActivity {
         } catch (IllegalAccessException e) {
             Log.e("BNVHelper", "Unable to change value of shift mode", e);
         }
-    }
+    }*/
 
 /*    private static void removeTextLabel(@NonNull BottomNavigationView bottomNavigationView, View view) {
         if (view == null) return;
@@ -667,7 +623,7 @@ public class BaseAppCompatActivity extends BaseActivity {
 
         JSONObject postData = getProfileJSObj(uid);
 
-        FirebaseDataManager.fetchProfileFromUID(postData, new ProfileListener() {
+        /*FirebaseDataManager.fetchProfileFromUID(postData, new ProfileListener() {
 
             @Override
             public void onLoadCompleted(boolean isExist, ProfileBean profileBeanWS) {
@@ -677,9 +633,9 @@ public class BaseAppCompatActivity extends BaseActivity {
                     profileBean = profileBeanWS;
                     populateProfile(profileBean);
                     App.saveToken();
-                    /*startActivity(new Intent(BaseAppCompatActivity.this, CreateProfileActivity.class)
+                    *//*startActivity(new Intent(BaseAppCompatActivity.this, CreateProfileActivity.class)
                             .putExtra("profileBean", profileBean));
-                    finish();*/
+                    finish();*//*
                 }
             }
 
@@ -687,7 +643,7 @@ public class BaseAppCompatActivity extends BaseActivity {
             public void onLoadFailed(String error) {
             }
         });
-
+*/
     }
 
     private JSONObject getProfileJSObj(String uid) {
@@ -701,7 +657,7 @@ public class BaseAppCompatActivity extends BaseActivity {
         return postData;
     }
 
-    private void populateProfile(ProfileBean profileBean) {
+   /* private void populateProfile(ProfileBean profileBean) {
 
         try {
 //            Config.getInstance().setAuthToken(profileBean.getAuthToken());
@@ -720,7 +676,7 @@ public class BaseAppCompatActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     private void clearApplicationData() {
         File cache = getApplication().getFilesDir();
@@ -922,26 +878,28 @@ public class BaseAppCompatActivity extends BaseActivity {
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         //mVibrator.vibrate(25);
 
-        startActivity(new Intent(BaseAppCompatActivity.this, DearestCountryListActivity.class)
+        /*startActivity(new Intent(BaseAppCompatActivity.this, DearestCountryListActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-
+*/
     }
 
     public void onDrawerMyDearestFriendsClick(View view) {
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         //mVibrator.vibrate(25);
+/*
 
         startActivity(new Intent(BaseAppCompatActivity.this, DearestFriendsActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+*/
 
     }
 
     public void onDrawerSearchClick(View view) {
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         //mVibrator.vibrate(25);
-
+/*
         startActivity(new Intent(BaseAppCompatActivity.this, SearchCategoriesActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));*/
 
     }
 }

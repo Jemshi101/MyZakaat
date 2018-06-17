@@ -11,20 +11,12 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -40,17 +32,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.quartzbit.myzakaat.R;
+import com.quartzbit.myzakaat.app.App;
+import com.quartzbit.myzakaat.config.TypefaceCache;
+import com.quartzbit.myzakaat.dialogs.PopupMessage;
+import com.quartzbit.myzakaat.listeners.PermissionListener;
+import com.quartzbit.myzakaat.util.FileOp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,25 +46,17 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.quartzbit.myzakaat.R;
-import com.quartzbit.myzakaat.app.App;
-import com.quartzbit.myzakaat.config.Config;
-import com.quartzbit.myzakaat.config.TypefaceCache;
-import com.quartzbit.myzakaat.dialogs.PopupMessage;
-import com.quartzbit.myzakaat.listeners.LocationUpdateListener;
-import com.quartzbit.myzakaat.listeners.PermissionListener;
-import com.quartzbit.myzakaat.util.FileOp;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import io.fabric.sdk.android.Fabric;
 
 //import com.digits.sdk.android.Digits;
 //import com.twitter.sdk.android.core.TwitterAuthConfig;
 //import com.twitter.sdk.android.core.TwitterCore;
 
-public abstract class BaseActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMyLocationButtonClickListener, com.google.android.gms.location.LocationListener,
-        LocationListener {
+public abstract class BaseActivity extends AppCompatActivity {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "tuEpvrhOVzYu6veSjOJecaRvr";
@@ -157,63 +136,19 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected boolean hasSMSPermissions;
 
 
-    private GoogleApiClient mGoogleApiClient;
-    private static final LocationRequest mLocationRequest = LocationRequest.create()
-            .setInterval(5000)         // 5 seconds
-            .setFastestInterval(16)    // 16ms = 60fps
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback locationCallback;
-    private boolean isRequestingLocationUpdates;
-    private ArrayList<LocationUpdateListener> locationUpdateListeners = new ArrayList<>();
     private ArrayList<PermissionListener> permissionListeners = new ArrayList<>();
-    private DatabaseReference mDatabase;
 
 
     protected void initBase() {
 
         App.checkForToken();
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        //	getActionBar().setHomeButtonEnabled(true);
-
-
-        if (App.getInstance().getGoogleApiClient() == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(App.getInstance().getApplicationContext())
-                    .addApi(LocationServices.API)
-                    .enableAutoManage(this, this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-
-            App.getInstance().setGoogleApiClient(mGoogleApiClient);
-        } else {
-            mGoogleApiClient = App.getInstance().getGoogleApiClient();
-        }
-
-        locationCallback = new LocationCallback() {
-
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    setLocationUpdate(location);
-                }
-            }
-        };
-
-        initLocationPermissionCheck();
 
 
         /*Remove this to remove Crashlytics and Fabric*/
 //        Fabric.with(this, new Crashlytics());
 //        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Crashlytics()/*, new TwitterCore(authConfig), new Digits.Builder().build()*/);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         //	getActionBar().setHomeButtonEnabled(true);
@@ -316,47 +251,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (isRequestingLocationUpdates) {
-            getCurrentLocation();
-        }
-
-        if (Config.getInstance().getUserID() != null && !Config.getInstance().getUserID().equals("")) {
-            mDatabase.child("user_thumb").child(Config.getInstance().getUserID()).child("online").setValue(true);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mFusedLocationClient.removeLocationUpdates(locationCallback);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (Config.getInstance().getUserID() != null && !Config.getInstance().getUserID().equals("")) {
-            mDatabase.child("user_thumb").child(Config.getInstance().getUserID()).child("online").setValue(false);
-        }
-    }
-
     int getCurrentActivity() {
         return CURRENT_ACTIVITY;
     }
 
     void setCurrentActivity(int currentActivity) {
         CURRENT_ACTIVITY = currentActivity;
-    }
-
-    private void initLocationPermissionCheck() {
-        if (CURRENT_ACTIVITY == HOME_ACTIVITY) {
-            if (!checkForLocationPermissions())
-                getLocationPermissions();
-            checkLocationSettingsStatus();
-        }
     }
 
     protected static void restart(Context context, int delay) {
@@ -944,183 +844,5 @@ public abstract class BaseActivity extends AppCompatActivity implements
         return isLocationServiceEnabled;
     }
 
-    private void setLocationUpdate(Location location) {
-        if (locationUpdateListeners != null && !locationUpdateListeners.isEmpty()) {
-            for (LocationUpdateListener locationUpdateListener : locationUpdateListeners) {
-                locationUpdateListener.onLocationUpdated(location);
-            }
-        }
-    }
-
-    void addLocationUpdateListener(LocationUpdateListener listener) {
-        isRequestingLocationUpdates = true;
-        if (locationUpdateListeners == null) {
-            locationUpdateListeners = new ArrayList<>();
-        }
-        locationUpdateListeners.add(listener);
-    }
-
-    void setUpLocationClientIfNeeded() {
-       /* if(!checkForLocationPermissions())
-            getLocationPermissions();*/
-
-
-        if (App.getInstance().getGoogleApiClient() == null) {
-
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(LocationServices.API)
-                    .enableAutoManage(this, this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-            //		mGoogleApiClient = new LocationClient(getApplicationContext(),this,this);
-            App.getInstance().setGoogleApiClient(mGoogleApiClient);
-        }
-    }
-
-    void getCurrentLocation() {
-        setUpLocationClientIfNeeded();
-        if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-        }
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (!checkForLocationPermissions())
-                getLocationPermissions();
-        } else {
-            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-
-                if (LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient) != null) {
-                    Config.getInstance().setCurrentLatitude(""
-                            + LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLatitude());
-                    Config.getInstance().setCurrentLongitude(""
-                            + LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient).getLongitude());
-//                    getLocationName();
-                }
-            }
-
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                // Logic to handle location object
-                                setLocationUpdate(location);
-                            }
-                        }
-                    });
-
-            mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                    locationCallback, null /* Looper */);
-
-
-            if ((Config.getInstance().getCurrentLatitude() == null || Config.getInstance().getCurrentLongitude() == null)
-                    || (Config.getInstance().getCurrentLatitude().equals("") || Config.getInstance().getCurrentLatitude().equals(""))) {
-//            Toast.makeText(BaseAppCompatActivity.this, "Retrieving Current Location...", Toast.LENGTH_SHORT).show();
-                LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                } else {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-                }
-                //			mHandler.postDelayed(periodicTask, 3000);
-            } /*else {
-            if (mGoogleApiClient != null) {
-                mGoogleApiClient.disconnect();
-            }
-        }*/
-        }
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-        if (Config.getInstance().getAuthToken() != null && !Config.getInstance().getAuthToken().equals("")
-                && (Config.getInstance().getCurrentLatitude() == null
-                || Config.getInstance().getCurrentLongitude() == null
-                || Config.getInstance().getCurrentLatitude().equalsIgnoreCase("")
-                || Config.getInstance().getCurrentLongitude().equalsIgnoreCase("")
-                || !Config.getInstance().getCurrentLatitude().equalsIgnoreCase(String.valueOf(location.getLatitude()))
-                || !Config.getInstance().getCurrentLongitude().equalsIgnoreCase(String.valueOf(location.getLongitude())))) {
-
-            Log.i(TAG, "onLocationChanged: Config : Latitude : " + Config.getInstance().getCurrentLatitude());
-            Log.i(TAG, "onLocationChanged: Config : Longitude : " + Config.getInstance().getCurrentLongitude());
-            Log.i(TAG, "onLocationChanged: Location Change : Latitude : " + location.getLatitude());
-            Log.i(TAG, "onLocationChanged: Location Change : Longtitude : " + location.getLongitude());
-
-            try {
-                setLocationUpdate(location);
-            } catch (Exception e) {
-            }
-
-        }
-
-        Config.getInstance().setCurrentLatitude("" + location.getLatitude());
-        Config.getInstance().setCurrentLongitude("" + location.getLongitude());
-
-
-    }
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-//        Toast.makeText(this, R.string.message_my_location_button_clicked, Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult arg0) {
-    }
-
-    @Override
-    public void onConnected(Bundle arg0) {
-        try {
-            if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                if (!checkForLocationPermissions())
-                    getLocationPermissions();
-                checkLocationSettingsStatus();
-            } else {
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    // Logic to handle location object
-                                    setLocationUpdate(location);
-                                }
-                            }
-                        });
-
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                //	mGoogleApiClient.requestLocationUpdates(mLocationRequest,HomeActivity.this);
-            }
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-
-    @Override
-    public void onConnectionSuspended(int arg0) {
-
-    }
 
 }

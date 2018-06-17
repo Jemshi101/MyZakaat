@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ad6442aded0ab88ecc6102815e644a7e",
+    "identityHash": "350f4d6679ac4e76d57918fb087e5268",
     "entities": [
       {
-        "tableName": "location",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `latitude` TEXT NOT NULL, `longitude` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "bank",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `bankName` TEXT NOT NULL, `accountName` TEXT NOT NULL, `accountNumber` TEXT NOT NULL, `range` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,20 +15,26 @@
             "notNull": true
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
+            "fieldPath": "bankName",
+            "columnName": "bankName",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "latitude",
-            "columnName": "latitude",
+            "fieldPath": "accountName",
+            "columnName": "accountName",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "longitude",
-            "columnName": "longitude",
+            "fieldPath": "accountNumber",
+            "columnName": "accountNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "range",
+            "columnName": "range",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -45,7 +51,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ad6442aded0ab88ecc6102815e644a7e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"350f4d6679ac4e76d57918fb087e5268\")"
     ]
   }
 }
