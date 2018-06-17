@@ -1,5 +1,6 @@
 package com.quartzbit.myzakaat.model
 
+import android.util.Log
 import com.quartzbit.myzakaat.app.App.getCurrentLocale
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -19,7 +20,7 @@ class TransactionBean : BaseBean() {
     var reference: String = ""
     var debit: Float = 0F
     var credit: Float = 0F
-    var balance: Float  = 0F
+    var balance: Float = 0F
     var bankCut: Float = 0F
     var realBalance: Float = 0F
     var interest: Float = 0F
@@ -27,7 +28,9 @@ class TransactionBean : BaseBean() {
 
     fun formatDate(date: String): String {
         val index = if (!date.contains("\n(")) date.indexOf("(") else date.indexOf("\n(")
-        return if (index == -1) date else date.substring(index + 1)
+        val str = if (index == -1) date else date.substring(0, index + 1)
+        Log.i("TransactionBean", "DATE STRING : " + str)
+        return str
     }
 
     fun dateToMillis(date: String): Long {

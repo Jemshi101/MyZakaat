@@ -96,8 +96,8 @@ public class AppConstants {
     public static final String BANK_SALARY_SBI = "e2";
     public static final String BANK_SALARY_AXIS = "e2";
 
-    public static final String RANGE_MY_SBI = "Class Data!A22:J";
-    public static final String RANGE_MY_CURRENT = "Class Data!A19:J";
+    public static final String RANGE_MY_SBI = "A22:J";
+    public static final String RANGE_MY_CURRENT = "A19:J";
     public static final String RANGE_SALARY_SBI = "Class Data!A22:J";
     public static final String RANGE_SALARY_AXIS = "Class Data!A22:J";
 

@@ -12,6 +12,7 @@ class TransactionListBean : BaseBean() {
 
     var transactions: ArrayList<TransactionBean> = ArrayList()
     var pagination: PaginationBean = PaginationBean()
+    var lastTransaction: TransactionBean? = null
 
     fun getTransactionsOfDate(dateInMillis: Long): ArrayList<TransactionBean> {
         var list = ArrayList<TransactionBean>()
@@ -26,17 +27,19 @@ class TransactionListBean : BaseBean() {
         return list
     }
 
-    fun getLastTransactionOfDate(dateInMillis: Long): TransactionBean {
+    fun getLastTransactionOfDate(dateInMillis: Long): TransactionBean? {
         var list = ArrayList<TransactionBean>()
 
 
         for (bean in transactions) {
             if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
                             false, dateInMillis, false)) {
+                list.add(bean)
+                lastTransaction = bean
             }
         }
 
-        return list.last()
+        return if (!list.isEmpty()) list.last() else lastTransaction
     }
 
 

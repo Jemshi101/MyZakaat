@@ -2,7 +2,6 @@ package com.quartzbit.myzakaat.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,8 +28,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.app.App;
 import com.quartzbit.myzakaat.config.Config;
-import com.quartzbit.myzakaat.listeners.LocationUpdateListener;
-import com.quartzbit.myzakaat.listeners.PermissionListener;
 import com.quartzbit.myzakaat.model.BasicBean;
 import com.quartzbit.myzakaat.net.WSAsyncTasks.LocationNameTask;
 import com.quartzbit.myzakaat.widgets.CustomTextView;
@@ -103,35 +100,6 @@ public class BaseAppCompatActivity extends BaseActivity {
         //	getActionBar().setHomeButtonEnabled(true);
 
 //        FacebookSdk.sdkInitialize(this.getApplicationContext());
-
-        LocationUpdateListener locationUpdateListener = new LocationUpdateListener() {
-            @Override
-            public void onLocationUpdated(Location location) {
-                if (Config.getInstance().isOnline()
-                        && (Config.getInstance().getDCurrentLatitude() == 0.0
-                        || Config.getInstance().getDCurrentLatitude() == location.getLatitude())
-                        && (Config.getInstance().getDCurrentLongitude() == 0.0
-                        || Config.getInstance().getDCurrentLongitude() == location.getLongitude())) {
-
-//            performDriverLocationUpdate(location);
-                }
-            }
-        };
-        addLocationUpdateListener(locationUpdateListener);
-
-        PermissionListener permissionListener = new PermissionListener() {
-            @Override
-            public void onPermissionCheckCompleted(int requestCode, boolean isPermissionGranted) {
-                if (requestCode == REQUEST_PERMISSIONS_LOCATION) {
-                    if (isPermissionGranted) {
-                        if (checkLocationSettingsStatus()) {
-                            getCurrentLocation();
-                        }
-                    }
-                }
-            }
-        };
-        addPermissionListener(permissionListener);
 
 
         lytContent = (FrameLayout) findViewById(R.id.lyt_contents_appcompat);

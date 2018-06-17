@@ -1,6 +1,7 @@
 package com.quartzbit.myzakaat.net;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.quartzbit.myzakaat.listeners.BasicListener;
 import com.quartzbit.myzakaat.listeners.PolyPointListener;
 import com.quartzbit.myzakaat.listeners.TransactionListListener;
@@ -49,7 +50,12 @@ public class DataManager {
 
             @Override
             public void onCancelled(Exception mLastError) {
+                listener.onLoadFailed(mLastError);
+            }
 
+            @Override
+            public void onPermissionError(UserRecoverableAuthIOException e) {
+                listener.onLoadFailed(e);
             }
         });
         transactionListTask.execute();
