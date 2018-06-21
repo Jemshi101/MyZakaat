@@ -44,9 +44,10 @@ class TransactionUtil {
 
             var isFirst = true
             var currentLowestBalance = Float.MAX_VALUE
-            var currentBalance = 0F
-            var currentInterest = 0F
-            var currentTotalBalance = 0F
+            mViewModel.currentBalance = 0F
+            mViewModel.currentInterest =  0F
+            mViewModel.currentTotalBalance = 0F
+
 
             while (!DateUtils.isToday(cal.timeInMillis)) {
                 Log.i(TAG, "DATE : " + App.getDateFromUnix(App.DATE_FORMAT_4, false,
