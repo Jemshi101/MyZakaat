@@ -28,18 +28,14 @@ class TransactionListBean : BaseBean() {
     }
 
     fun getLastTransactionOfDate(dateInMillis: Long): TransactionBean? {
-        var list = ArrayList<TransactionBean>()
-
-
         for (bean in transactions) {
             if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
                             false, dateInMillis, false)) {
-                list.add(bean)
                 lastTransaction = bean
             }
         }
 
-        return if (!list.isEmpty()) list.last() else lastTransaction
+        return lastTransaction
     }
 
 
