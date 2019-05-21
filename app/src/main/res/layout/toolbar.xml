@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="top"
-    android:background="@color/colorPrimary"
-    android:contentInsetLeft="0dp"
-    android:contentInsetStart="0dp"
-    android:elevation="1dp"
-    android:gravity="center"
-    android:minHeight="?actionBarSize"
-    android:textColor="@color/white"
-    android:theme="@style/ToolbarStyle"
-    app:contentInsetLeft="0dp"
-    app:contentInsetStart="0dp"
-    app:contentInsetStartWithNavigation="0dp"
-    app:layout_collapseMode="pin"
-    app:layout_scrollFlags="scroll|enterAlways"
-    app:theme="@style/ToolbarStyle"
-    app:title="@string/app_name">
-
-    <com.quartzbit.myzakaat.widgets.CustomTextView
-        android:id="@+id/txt_toolbar_title"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+    
+    </data>
+    
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/transparent"
-        android:ellipsize="end"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@color/colorPrimary"
+        android:contentInsetLeft="0dp"
+        android:contentInsetStart="0dp"
+        android:elevation="1dp"
         android:gravity="center"
-        android:maxLines="1"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:minHeight="?actionBarSize"
         android:textColor="@color/white"
-        android:textStyle="bold"/>
-</androidx.appcompat.widget.Toolbar>
+        android:theme="@style/ToolbarStyle"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_collapseMode="pin"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:theme="@style/ToolbarStyle"
+        app:title="@string/app_name">
+        
+        <com.quartzbit.myzakaat.widgets.CustomTextView
+            android:id="@+id/txt_toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/transparent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+</layout>
 

@@ -640,9 +640,10 @@
     <string name="label_lowest_amount">Lowest Amount</string>
     <string name="label_zakaat_amount">Zakaat Amount</string>
     <string name="btn_view_bank_details">View Bank Details</string>
-
-
-    <string-array name="prefix">
+	<string name="label_current_transaction_date">Current Transaction Date</string>
+	
+	
+	<string-array name="prefix">
         <item>Dr</item>
         <item>Master</item>
         <item>Miss</item>

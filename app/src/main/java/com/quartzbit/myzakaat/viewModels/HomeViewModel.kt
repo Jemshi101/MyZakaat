@@ -18,6 +18,7 @@ class HomeViewModel : ViewModel() {
     var currentInterest: Float = 0F
     var currentTotalBalance: Float = 0F
     var zakaatStartDate = Calendar.getInstance()
+    var currentTransactionDate = ""
     var zakaat: Float = (currentLowestBalance * 2.5 / 100).toFloat()
 
 }

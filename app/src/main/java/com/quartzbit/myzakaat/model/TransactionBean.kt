@@ -1,7 +1,9 @@
 package com.quartzbit.myzakaat.model
 
 import android.util.Log
+import android.util.TimeUtils
 import com.quartzbit.myzakaat.app.App.getCurrentLocale
+import com.quartzbit.myzakaat.util.TimeUtil
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,19 +31,28 @@ class TransactionBean : BaseBean() {
     fun formatDate(date: String): String {
         val index = if (!date.contains("\n(")) date.indexOf("(") else date.indexOf("\n(")
         val str = if (index == -1) date else date.substring(0, index + 1)
-        Log.i("TransactionBean", "DATE STRING : " + str)
+        Log.i("TransactionBean", "DATE STRING : $str")
         return str
     }
 
     fun dateToMillis(date: String): Long {
-        val calTemp = Calendar.getInstance()
-        try {
+        val calTemp = TimeUtil.getCurrentDateWithoutTime()
+        return try {
             val sdf = SimpleDateFormat("dd-MMM-yyyy", getCurrentLocale())
             calTemp.time = sdf.parse(date)
-            return calTemp.timeInMillis
+            calTemp.timeInMillis
         } catch (ignored: ParseException) {
-            return 0
+            0
         }
+    }
+
+    override fun toString(): String {
+        return "ID : $id \n" +
+                "Date : $dateString \n" +
+                "Balance : $balance \n" +
+                "Interest : $interest \n" +
+                "Real Balance : $realBalance \n" +
+                "Lowest Amount : $lowestAmount"
     }
 
 

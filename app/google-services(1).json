@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "340498179153",
+    "firebase_url": "https://watchful-scope-206708.firebaseio.com",
+    "project_id": "watchful-scope-206708",
+    "storage_bucket": "watchful-scope-206708.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340498179153:android:e819d55142266256",
+        "android_client_info": {
+          "package_name": "com.quartzbit.myzakaat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340498179153-gk0sr58dt6pk1jkdhh5u5k16k2tpl0ft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quartzbit.myzakaat",
+            "certificate_hash": "06c28ab7b90e608b789bd1f477b88c53073442a7"
+          }
+        },
+        {
+          "client_id": "340498179153-ga73hlq8rrr8etup0461vnm3dp0jpop4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quartzbit.myzakaat",
+            "certificate_hash": "1f01ccab0b3ea71170caf3acf0ff16d13d8e1a3b"
+          }
+        },
+        {
+          "client_id": "340498179153-1gfmg6gihtm0bse4jtoa7f8451uc7tgb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlCC5zh9AeN2iCOrpY49_wj7VXjb-Q6G8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340498179153-1gfmg6gihtm0bse4jtoa7f8451uc7tgb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

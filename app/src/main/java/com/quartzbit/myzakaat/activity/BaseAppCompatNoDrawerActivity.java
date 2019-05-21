@@ -1,14 +1,7 @@
 package com.quartzbit.myzakaat.activity;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
@@ -20,12 +13,20 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.quartzbit.myzakaat.R;
 import com.quartzbit.myzakaat.app.App;
 import com.quartzbit.myzakaat.config.Config;
+import com.quartzbit.myzakaat.databinding.LayoutBaseAppcompatNoDrawerBinding;
 import com.quartzbit.myzakaat.util.AppConstants;
 import com.quartzbit.myzakaat.util.FileOp;
 import com.quartzbit.myzakaat.widgets.TextViewWithImage;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.quartzbit.myzakaat.app.App.NETWORK_NOT_AVAILABLE;
 import static com.quartzbit.myzakaat.app.App.SERVER_CONNECTION_AVAILABLE;
@@ -46,6 +47,9 @@ public class BaseAppCompatNoDrawerActivity extends BaseActivity {
     private TextViewWithImage txtMessage;
     private ImageView ivMessage;
     protected TextView txtTitle;
+
+
+    private LayoutBaseAppcompatNoDrawerBinding baseBinding;
 
 
     @Override
@@ -73,21 +77,20 @@ public class BaseAppCompatNoDrawerActivity extends BaseActivity {
         //FacebookSdk.sdkInitialize(this.getApplicationContext());
 
 
-        lytContent = (FrameLayout) findViewById(R.id.lyt_contents_base_appcompat_no_drawer);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorlayout_base_appcompat_no_drawer);
+//        lytContent = baseBinding.lytContentsBaseAppcompatNoDrawer;
+        coordinatorLayout = baseBinding.coordinatorlayoutBaseAppcompatNoDrawer;
 
+        toolbar = baseBinding.toolbar.toolbar;
         if (isDarkToolbar()) {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
             View lytToolbarDark = getLayoutInflater().inflate(R.layout.toolbar_dark, coordinatorLayout);
             Toolbar toolbarDark = lytToolbarDark.findViewById(R.id.toolbar_dark);
             coordinatorLayout.removeView(toolbar);
             setSupportActionBar(toolbarDark);
             toolbar = toolbarDark;
-            txtTitle = (TextView) lytToolbarDark.findViewById(R.id.txt_toolbar_dark_title);
+            txtTitle = lytToolbarDark.findViewById(R.id.txt_toolbar_dark_title);
         } else {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-            txtTitle = (TextView) toolbar.findViewById(R.id.txt_toolbar_title);
+            txtTitle = baseBinding.toolbar.txtToolbarTitle;
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -97,14 +100,14 @@ public class BaseAppCompatNoDrawerActivity extends BaseActivity {
 //            toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         }
 
-        lytProgress = findViewById(R.id.lyt_progress_base);
-        progressBase = (ProgressBar) findViewById(R.id.progress_base_appcompat_no_drawer);
+        lytProgress = baseBinding.lytProgressBase;
+        progressBase = baseBinding.progressBaseAppcompatNoDrawer;
 
-        lytMessage = findViewById(R.id.lyt_default_message_base_appcompat_no_drawer);
-        txtMessage = (TextViewWithImage) findViewById(R.id.txt_default_message_base_appcompat_no_drawer);
-        ivMessage = (ImageView) findViewById(R.id.iv_default_message_base_appcompat_no_drawer);
+        lytMessage = baseBinding.lytDefaultMessageBaseAppcompatNoDrawer;
+        txtMessage = baseBinding.txtDefaultMessageBaseAppcompatNoDrawer;
+        ivMessage = baseBinding.ivDefaultMessageBaseAppcompatNoDrawer;
 
-        swipeView = (SwipeRefreshLayout) findViewById(R.id.swipe_base_appcompat_no_drawer);
+        swipeView = baseBinding.swipeBaseAppcompatNoDrawer;
         swipeView.setColorSchemeResources(android.R.color.holo_blue_dark, android.R.color.holo_blue_light,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light);
         swipeView.setEnabled(false);
@@ -140,10 +143,26 @@ public class BaseAppCompatNoDrawerActivity extends BaseActivity {
 
     @Override
     public void setContentView(final int layoutResID) {
-        lytBase = (CoordinatorLayout) getLayoutInflater().inflate(R.layout.layout_base_appcompat_no_drawer, null);
-        lytContent = (FrameLayout) lytBase.findViewById(R.id.lyt_contents_base_appcompat_no_drawer);
+//        lytBase = (CoordinatorLayout) getLayoutInflater().inflate(R.layout.layout_base_appcompat_no_drawer, null);
+        baseBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_base_appcompat_no_drawer, null, false);
+        lytBase = baseBinding.coordinatorlayoutBaseAppcompatNoDrawer;
+        lytContent = baseBinding.lytContentsBaseAppcompatNoDrawer;
         getLayoutInflater().inflate(layoutResID, lytContent, true);
-        super.setContentView(lytBase);
+        super.setContentView(baseBinding.getRoot());
+        initViewBase();
+    }
+
+    @Override
+    public void setContentView(View contentView) {
+
+        baseBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.layout_base_appcompat_no_drawer, null, false);
+        lytBase = baseBinding.coordinatorlayoutBaseAppcompatNoDrawer;
+//        DrawerLayout lytBase = (DrawerLayout) getLayoutInflater().inflate(R.layout.layout_base_appcompat, null);
+//        lytContent = baseBinding.lytContentsAppcompat.findViewById(R.id.lyt_contents_appcompat);
+        lytContent = baseBinding.lytContentsBaseAppcompatNoDrawer;
+        lytContent.addView(contentView);
+//        getLayoutInflater().inflate(layoutResID, lytContent, true);
+        super.setContentView(baseBinding.getRoot());
         initViewBase();
     }
 

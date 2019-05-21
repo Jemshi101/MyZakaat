@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.View
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -17,6 +18,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.util.ExponentialBackOff
 import com.quartzbit.myzakaat.R
 import com.quartzbit.myzakaat.app.App
+import com.quartzbit.myzakaat.databinding.ActivityHomeBinding
 import com.quartzbit.myzakaat.dialogs.SelectDateDialog
 import com.quartzbit.myzakaat.listeners.PermissionListener
 import com.quartzbit.myzakaat.listeners.TransactionListListener
@@ -27,25 +29,24 @@ import com.quartzbit.myzakaat.util.AppConstants
 import com.quartzbit.myzakaat.util.TransactionUtil
 import com.quartzbit.myzakaat.util.TransactionUtil.TransactionUtilListener
 import com.quartzbit.myzakaat.viewModels.HomeViewModel
-import kotlinx.android.synthetic.main.activity_home.*
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.HashMap
 
 class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
+    private lateinit var binding: ActivityHomeBinding
     lateinit var mCredential: GoogleAccountCredential
     private lateinit var bankListBean: BankListBean
 
-    val REQUEST_ACCOUNT_PICKER = 1000;
-    val REQUEST_AUTHORIZATION = 1001;
+    val REQUEST_ACCOUNT_PICKER = 1000
+    val REQUEST_AUTHORIZATION = 1001
 
-    val REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-    val BUTTON_TEXT = "Call Google Sheets API";
-    val PREF_ACCOUNT_NAME = "accountName";
+    val REQUEST_GOOGLE_PLAY_SERVICES = 1002
+    val BUTTON_TEXT = "Call Google Sheets API"
+    val PREF_ACCOUNT_NAME = "accountName"
 
     val SCOPES = mutableListOf<String>("https://www.googleapis.com/auth/spreadsheets.readonly",
-            "https://www.googleapis.com/auth/spreadsheets");
+            "https://www.googleapis.com/auth/spreadsheets")
 
     private lateinit var selectDateDialog: SelectDateDialog
 
@@ -53,7 +54,9 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+//        setContentView(R.layout.activity_home)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_home, null, false)
+        setContentView(binding.root)
 
         mViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
@@ -66,14 +69,14 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     private fun populateHome() {
 
-        txtHomeCurrentBalance.text = mViewModel.currentBalance.toString()
-        txtHomeInterest.text = mViewModel.currentInterest.toString()
-        txtHomeTotalBalance.text = mViewModel.currentTotalBalance.toString()
-        txtHomeLowestAmount.text = mViewModel.currentLowestBalance.toString()
-        val zakaat: Float = (mViewModel.currentLowestBalance * 2.5 / 100).toFloat()
-        txtHomeZakaatAmount.text = zakaat.toString()
+        binding.txtHomeCurrentBalance.text = mViewModel.currentBalance.toString()
+        binding.txtHomeInterest.text = mViewModel.currentInterest.toString()
+        binding.txtHomeTotalBalance.text = mViewModel.currentTotalBalance.toString()
+        binding.txtHomeLowestAmount.text = mViewModel.currentLowestBalance.toString()
+        binding.txtHomeCurrentTransactionDate.text = mViewModel.currentTransactionDate
+        binding.txtHomeZakaatAmount.text = mViewModel.zakaat.toString()
 
-        txtHomeZakaatStartDate.text = App.getDateFromUnix(App.DATE_FORMAT_5, false,
+        binding.txtHomeZakaatStartDate.text = App.getDateFromUnix(App.DATE_FORMAT_5, false,
                 false, mViewModel.zakaatStartDate.timeInMillis, false)
 
     }
@@ -96,11 +99,11 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
     private fun initViews() {
 
 
-        btnHomeEditZakaatStartDate.setOnClickListener {
+        binding.btnHomeEditZakaatStartDate.setOnClickListener {
             onEditZakaatStartDateClick(it)
         }
 
-        btnHomeViewBankDetails.setOnClickListener {
+        binding.btnHomeViewBankDetails.setOnClickListener {
             onViewBankDetailsClick(it)
         }
 
@@ -113,7 +116,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         val permissionListener = PermissionListener { requestCode, isPermissionGranted ->
             if (requestCode == REQUEST_PERMISSIONS_GET_ACCOUNTS) {
                 if (isPermissionGranted) {
-                    chooseAccount();
+                    chooseAccount()
                 } else {
                     Snackbar.make(coordinatorLayout, "Accounts Permission Required", Snackbar.LENGTH_LONG).show()
                 }
@@ -128,12 +131,12 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         /*if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext)
                 != ConnectionResult.SUCCESS) {
             acquireGooglePlayServices()
-        } else */if (mCredential.getSelectedAccountName() == null) {
+        } else */if (mCredential.selectedAccountName == null) {
             chooseAccount()
         } else if (!App.isNetworkAvailable()) {
             Snackbar.make(coordinatorLayout, AppConstants.NO_NETWORK_AVAILABLE, Snackbar.LENGTH_LONG).show()
         } else {
-            bankListBean = AppConstants.getBankListBean();
+            bankListBean = AppConstants.getBankListBean()
             if (bankListBean.banks.isNotEmpty()) {
                 fetchTransactionList(0, mCredential)
             }
@@ -143,20 +146,21 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
     private fun fetchTransactionList(position: Int, mCredential: GoogleAccountCredential) {
 
         var urlParams = HashMap<String, String>()
-        var bankBean = bankListBean.banks.get(position)
+        var bankBean = bankListBean.banks[position]
         urlParams.put("id", bankBean.id)
         urlParams.put("range", bankBean.range)
 
 //        DataManager.fetchTransactionList(urlParams, mCredential, TransactionListListener() { })
         DataManager.fetchTransactionList(urlParams, mCredential, object : TransactionListListener {
             override fun onLoadFailed(exception: UserRecoverableAuthIOException) {
-                startActivityForResult(exception.getIntent(), REQUEST_AUTHORIZATION);
+                startActivityForResult(exception.intent, REQUEST_AUTHORIZATION)
             }
 
             override fun onLoadFailed(exception: Exception) {
             }
 
             override fun onLoadCompleted(transactionListBean: TransactionListBean) {
+                transactionListBean.bankBean = bankListBean.banks[position]
 
                 if (mViewModel.transactionListBeanList.size - 1 < position)
                     mViewModel.transactionListBeanList.add(transactionListBean)
@@ -167,14 +171,14 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
                 if (position < bankListBean.banks.size - 1) {
                     fetchTransactionList(position + 1, mCredential)
                 } else {
-                    processTransactions();
+                    processTransactions()
                 }
 
             }
 
             override fun onLoadFailed(error: String) {
                 Snackbar.make(coordinatorLayout, error, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show();
+                        .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show()
             }
 
         })
@@ -227,7 +231,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
             var interest = 0F
             var totalBalance = 0F
             for (transactionListBean in mViewModel.transactionListBeanList) {
-                var transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
+                var transactionBean = transactionListBean.getLastLowestTransactionOfDate(cal.timeInMillis)
                 Log.i(TAG, "process : transactionBean : " + Gson().toJson(transactionBean))
                 if (transactionBean != null) {
                     balance += transactionBean.realBalance
@@ -260,7 +264,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         val accountName = getPreferences(Context.MODE_PRIVATE)
                 .getString(PREF_ACCOUNT_NAME, null)
         if (accountName != null) {
-            mCredential.setSelectedAccountName(accountName)
+            mCredential.selectedAccountName = accountName
             Log.i(TAG, "chooseAccount : Account Name : " + accountName)
             getResultsFromApi()
         } else {
@@ -292,7 +296,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
                     val editor = settings.edit()
                     editor.putString(PREF_ACCOUNT_NAME, accountName)
                     editor.apply()
-                    mCredential.setSelectedAccountName(accountName)
+                    mCredential.selectedAccountName = accountName
                     getResultsFromApi()
                 }
             }
@@ -321,7 +325,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
     }*/
 
     private fun onViewBankDetailsClick(view: View) {
-        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
         //mVibrator.vibrate(25);
 
 
@@ -337,7 +341,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
                 mViewModel.zakaatStartDate = cal
                 var date: String = App.getDateFromUnix(App.DATE_FORMAT_5, false,
                         false, cal.timeInMillis, false)
-                txtHomeZakaatStartDate.text = date
+                binding.txtHomeZakaatStartDate.text = date
                 chooseAccount()
 
 

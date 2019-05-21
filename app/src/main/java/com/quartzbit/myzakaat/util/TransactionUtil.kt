@@ -3,7 +3,6 @@ package com.quartzbit.myzakaat.util
 import android.os.AsyncTask
 import android.text.format.DateUtils
 import android.util.Log
-import com.google.gson.Gson
 import com.quartzbit.myzakaat.app.App
 import com.quartzbit.myzakaat.viewModels.HomeViewModel
 import java.util.*
@@ -55,12 +54,12 @@ class TransactionUtil {
                 var interest = 0F
                 var totalBalance = 0F
                 for (transactionListBean in mViewModel.transactionListBeanList) {
-                    val transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
-                    Log.i(TAG, "process : transactionBean : " + Gson().toJson(transactionBean))
-                    if (transactionBean != null) {
-                        balance += transactionBean.realBalance
-                        interest += transactionBean.interest
-                        totalBalance += transactionBean.balance
+                    val transactionBean = transactionListBean.getLastLowestTransactionOfDate(cal.timeInMillis)
+                    transactionBean?.let {
+                        Log.i(TAG, "process : transactionBean : $it")
+                        balance += it.realBalance
+                        interest += it.interest
+                        totalBalance += it.balance
                     }
                 }
                 if (isFirst) {
@@ -74,6 +73,9 @@ class TransactionUtil {
                 mViewModel.currentBalance = balance
                 mViewModel.currentInterest = interest
                 mViewModel.currentTotalBalance = totalBalance
+                mViewModel.currentTotalBalance = totalBalance
+                mViewModel.currentTransactionDate = App.getDateFromUnix(App.DATE_FORMAT_4, false,
+                        false, cal.timeInMillis, false)
 
                 publishProgress(mViewModel)
 //                transactionUtilListener.publishProgress(mViewModel)
@@ -87,7 +89,7 @@ class TransactionUtil {
         override fun onProgressUpdate(vararg values: HomeViewModel) {
             super.onProgressUpdate(*values)
 
-            transactionUtilListener.publishProgress(values.get(0))
+            transactionUtilListener.publishProgress(values[0])
         }
 
         override fun onPostExecute(result: HomeViewModel?) {
@@ -104,7 +106,6 @@ class TransactionUtil {
     interface TransactionUtilListener {
         fun actionCompletedSuccessfully(mViewModel: HomeViewModel)
         fun publishProgress(mViewModel: HomeViewModel)
-
         fun actionFailed(errorMsg: String)
     }
 }
