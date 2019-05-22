@@ -87,7 +87,6 @@
 				<com.quartzbit.myzakaat.widgets.CustomTextView
 					android:id="@+id/txt_home_zakaat_start_date"
 					style="@style/ItemValue"
-					android:gravity="center"
 					android:text="@string/sample_date_numerical" />
 			
 			</LinearLayout>
@@ -107,6 +106,19 @@
 				android:text="@string/label_edit_date"
 				android:textColor="@color/white" />
 			
+			
+			<LinearLayout style="@style/MenuItemParent">
+				
+				<com.quartzbit.myzakaat.widgets.CustomTextView
+					style="@style/ItemLabel"
+					android:text="@string/label_lowest_transaction_date" />
+				
+				<com.quartzbit.myzakaat.widgets.CustomTextView
+					android:id="@+id/txt_home_lowest_transaction_date"
+					style="@style/ItemValue"
+					tools:text="@string/sample_date_numerical" />
+			
+			</LinearLayout>
 			
 			<LinearLayout style="@style/MenuItemParent">
 				

@@ -76,6 +76,8 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         binding.txtHomeCurrentTransactionDate.text = mViewModel.currentTransactionDate
         binding.txtHomeZakaatAmount.text = mViewModel.zakaat.toString()
 
+        binding.txtHomeLowestTransactionDate.text = mViewModel.lowestTransactionDate
+
         binding.txtHomeZakaatStartDate.text = App.getDateFromUnix(App.DATE_FORMAT_5, false,
                 false, mViewModel.zakaatStartDate.timeInMillis, false)
 

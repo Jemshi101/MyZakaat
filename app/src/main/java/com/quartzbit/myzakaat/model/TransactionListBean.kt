@@ -1,7 +1,6 @@
 package com.quartzbit.myzakaat.model
 
 import com.quartzbit.myzakaat.app.App
-import com.quartzbit.myzakaat.util.TimeUtil
 import java.util.*
 
 /**
@@ -17,20 +16,15 @@ class TransactionListBean : BaseBean() {
     var lastTransaction: TransactionBean? = null
 
     fun setLastTransaction(dateInMillis: Long) {
-        var currentTransaction: TransactionBean? = null
         for (bean in transactions) {
-            if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
+            if (dateInMillis > bean.date) {
+                lastTransaction = bean
+            } else if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
                             false, dateInMillis, false)) {
-                currentTransaction = bean
-                lastTransaction = currentTransaction;
-                break;
-            }
-        }
-        if(currentTransaction == null){
-            for(bean in transactions){
-                if(dateInMillis < bean.date){
-
-                }
+                lastTransaction = bean
+                break
+            } else {
+                break
             }
         }
     }
@@ -50,7 +44,7 @@ class TransactionListBean : BaseBean() {
 
     private fun getTransactionFromLastTransaction() =
             if (lastTransaction != null)
-                transactions.subList(transactions.indexOf(lastTransaction!!), transactions.size - 1)
+                transactions.subList(transactions.indexOf(lastTransaction!!), transactions.size)
             else transactions
 
     fun getLastLowestTransactionOfDate(dateInMillis: Long): TransactionBean? {
@@ -66,10 +60,13 @@ class TransactionListBean : BaseBean() {
                 } ?: kotlin.run {
                     lowestTransactionBean = bean
                 }
+                lastTransaction = bean
             }
         }
         lowestTransactionBean?.let {
-            lastTransaction = lowestTransactionBean
+            return it
+        } ?: kotlin.run {
+            return lastTransaction
         }
 
         /*for (bean in transactions) {
@@ -84,7 +81,6 @@ class TransactionListBean : BaseBean() {
             }
         }*/
 
-        return lastTransaction
     }
 
 

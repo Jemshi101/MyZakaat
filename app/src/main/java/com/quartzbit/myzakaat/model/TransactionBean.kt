@@ -48,7 +48,7 @@ class TransactionBean : BaseBean() {
 
     override fun toString(): String {
         return "ID : $id \n" +
-                "Date : $dateString \n" +
+                "Date : $dateString ; TimeStamp : $date\n" +
                 "Balance : $balance \n" +
                 "Interest : $interest \n" +
                 "Real Balance : $realBalance \n" +
