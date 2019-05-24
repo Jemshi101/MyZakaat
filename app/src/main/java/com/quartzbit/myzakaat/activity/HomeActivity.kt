@@ -34,19 +34,23 @@ import kotlin.collections.HashMap
 
 class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
+    companion object {
+        const val REQUEST_ACCOUNT_PICKER = 1000
+        const val REQUEST_AUTHORIZATION = 1001
+
+        const val REQUEST_GOOGLE_PLAY_SERVICES = 1002
+        const val BUTTON_TEXT = "Call Google Sheets API"
+        const val PREF_ACCOUNT_NAME = "accountName"
+
+    }
+
     private lateinit var binding: ActivityHomeBinding
     lateinit var mCredential: GoogleAccountCredential
     private lateinit var bankListBean: BankListBean
 
-    val REQUEST_ACCOUNT_PICKER = 1000
-    val REQUEST_AUTHORIZATION = 1001
-
-    val REQUEST_GOOGLE_PLAY_SERVICES = 1002
-    val BUTTON_TEXT = "Call Google Sheets API"
-    val PREF_ACCOUNT_NAME = "accountName"
-
     val SCOPES = mutableListOf<String>("https://www.googleapis.com/auth/spreadsheets.readonly",
             "https://www.googleapis.com/auth/spreadsheets")
+
 
     private lateinit var selectDateDialog: SelectDateDialog
 
@@ -62,8 +66,15 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
         initViews()
         populateHome()
-        setTitle(R.string.app_name, R.color.white)
 
+        getSupportActionBar()?.let {
+            setTitle(R.string.app_name, R.color.white)
+            it.title = ""
+            it.setDisplayHomeAsUpEnabled(false)
+            it.setHomeButtonEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
+            it.setDisplayShowTitleEnabled(true)
+        }
 
     }
 
