@@ -1,89 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/coordinatorlayout_base_appcompat_no_drawer"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:animateLayoutChanges="true"
-	android:fitsSystemWindows="false"
-	android:orientation="vertical"
-	android:weightSum="100"
-	tools:context=".activity.BaseAppCompatNoDrawerActivity">
+	xmlns:tools="http://schemas.android.com/tools">
 	
-	<include layout="@layout/toolbar" />
+	<data>
 	
-	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-		android:id="@+id/swipe_base_appcompat_no_drawer"
+	</data>
+	
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
+		android:id="@+id/coordinatorlayout_base_appcompat_no_drawer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_gravity="top"
-		android:paddingTop="?attr/actionBarSize">
+		android:animateLayoutChanges="true"
+		android:fitsSystemWindows="false"
+		android:orientation="vertical"
+		android:weightSum="100"
+		tools:context=".activity.BaseAppCompatNoDrawerActivity">
 		
-		<FrameLayout
-			android:id="@+id/lyt_frame_base_appcompat_no_drawer"
+		<include layout="@layout/toolbar" />
+		
+		<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+			android:id="@+id/swipe_base_appcompat_no_drawer"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:orientation="vertical">
+			android:layout_gravity="top"
+			android:paddingTop="?attr/actionBarSize">
 			
 			<FrameLayout
-				android:id="@+id/lyt_contents_base_appcompat_no_drawer"
+				android:id="@+id/lyt_frame_base_appcompat_no_drawer"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:layout_gravity="top"
 				android:orientation="vertical">
+				
+				<FrameLayout
+					android:id="@+id/lyt_contents_base_appcompat_no_drawer"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_gravity="top"
+					android:orientation="vertical">
+				
+				</FrameLayout>
+				
+				<LinearLayout
+					android:id="@+id/lyt_default_message_base_appcompat_no_drawer"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:gravity="center"
+					android:onClick="onBaseAppCompatNoDrawerDummyClick"
+					android:orientation="vertical"
+					android:padding="20dp">
+					
+					<ImageView
+						android:id="@+id/iv_default_message_base_appcompat_no_drawer"
+						android:layout_width="150dp"
+						android:layout_height="150dp"
+						android:scaleType="centerInside"
+						android:tint="@color/text_2" />
+					
+					
+					<com.quartzbit.myzakaat.TextViewWithImage
+						android:id="@+id/txt_default_message_base_appcompat_no_drawer"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:layout_marginBottom="50dp"
+						android:layout_marginTop="20dp"
+						android:text="@string/label_no_data_available"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="@color/text_2"
+						android:visibility="visible" />
+				</LinearLayout>
+				
+				<FrameLayout
+					android:id="@+id/lyt_progress_base"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@color/white"
+					android:onClick="onBaseAppCompatNoDrawerDummyClick"
+					android:visibility="visible">
+					
+					<ProgressBar
+						android:id="@+id/progress_base_appcompat_no_drawer"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:indeterminate="true"
+						android:visibility="visible" />
+				</FrameLayout>
 			
 			</FrameLayout>
-			
-			<LinearLayout
-				android:id="@+id/lyt_default_message_base_appcompat_no_drawer"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center"
-				android:onClick="onBaseAppCompatNoDrawerDummyClick"
-				android:orientation="vertical"
-				android:padding="20dp">
-				
-				<ImageView
-					android:id="@+id/iv_default_message_base_appcompat_no_drawer"
-					android:layout_width="150dp"
-					android:layout_height="150dp"
-					android:scaleType="centerInside"
-					android:tint="@color/text_2" />
-				
-				
-				<com.quartzbit.myzakaat.widgets.TextViewWithImage
-					android:id="@+id/txt_default_message_base_appcompat_no_drawer"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:layout_marginBottom="50dp"
-					android:layout_marginTop="20dp"
-					android:text="@string/label_no_data_available"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:textColor="@color/text_2"
-					android:visibility="visible" />
-			</LinearLayout>
-			
-			<FrameLayout
-				android:id="@+id/lyt_progress_base"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:background="@color/white"
-				android:onClick="onBaseAppCompatNoDrawerDummyClick"
-				android:visibility="visible">
-				
-				<ProgressBar
-					android:id="@+id/progress_base_appcompat_no_drawer"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:indeterminate="true"
-					android:visibility="visible" />
-			</FrameLayout>
-		
-		</FrameLayout>
-	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+	
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

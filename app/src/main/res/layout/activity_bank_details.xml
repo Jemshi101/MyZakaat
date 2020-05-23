@@ -13,11 +13,11 @@
 		android:orientation="vertical">
 		<LinearLayout style="@style/MenuItemParent">
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				style="@style/ItemLabel"
 				android:text="@string/label_total_balance" />
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				android:id="@+id/txtBankDetailsTotalBalance"
 				style="@style/ItemValue"
 				android:text="@string/sample_00" />
@@ -26,11 +26,11 @@
 		
 		<LinearLayout style="@style/MenuItemParent">
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				style="@style/ItemLabel"
 				android:text="@string/label_interest" />
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				android:id="@+id/txtBankDetailsInterest"
 				style="@style/ItemValue"
 				android:text="@string/sample_00" />
@@ -39,11 +39,11 @@
 		
 		<LinearLayout style="@style/MenuItemParent">
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				style="@style/ItemLabel"
 				android:text="@string/label_current_balance" />
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				android:id="@+id/txtBankDetailsCurrentBalance"
 				style="@style/ItemValue"
 				android:text="@string/sample_00" />
@@ -60,11 +60,11 @@
 		
 		<LinearLayout style="@style/MenuItemParent">
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				style="@style/ItemLabel"
 				android:text="@string/label_lowest_amount" />
 			
-			<com.quartzbit.myzakaat.widgets.CustomTextView
+			<TextView
 				android:id="@+id/txtBankDetailsLowestAmount"
 				style="@style/ItemValue"
 				android:text="@string/sample_00" />

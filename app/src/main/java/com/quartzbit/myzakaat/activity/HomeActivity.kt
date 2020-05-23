@@ -61,7 +61,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
-        setContentView(R.layout.activity_home)
+        setContentView(binding.root)
 
         mViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 

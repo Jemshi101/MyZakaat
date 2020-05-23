@@ -22,7 +22,7 @@
     app:theme="@style/ToolbarStyle"
     app:title="@string/app_name">
 
-    <com.quartzbit.myzakaat.widgets.CustomTextView
+    <TextView
         android:id="@+id/txt_toolbar_title"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"

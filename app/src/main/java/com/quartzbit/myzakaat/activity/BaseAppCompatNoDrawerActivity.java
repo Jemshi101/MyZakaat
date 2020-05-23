@@ -1,11 +1,8 @@
 package com.quartzbit.myzakaat.activity;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.widget.Toolbar;
@@ -21,14 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.quartzbit.myzakaat.R;
-import com.quartzbit.myzakaat.app.App;
-import com.quartzbit.myzakaat.config.Config;
-import com.quartzbit.myzakaat.util.AppConstants;
 import com.quartzbit.myzakaat.util.FileOp;
 import com.quartzbit.myzakaat.widgets.TextViewWithImage;
-
-import static com.quartzbit.myzakaat.app.App.NETWORK_NOT_AVAILABLE;
-import static com.quartzbit.myzakaat.app.App.SERVER_CONNECTION_AVAILABLE;
 
 
 public class BaseAppCompatNoDrawerActivity extends BaseActivity {
@@ -43,7 +34,7 @@ public class BaseAppCompatNoDrawerActivity extends BaseActivity {
     protected View lytProgress;
     private ProgressBar progressBase;
     private View lytMessage;
-    private TextViewWithImage txtMessage;
+    private TextView txtMessage;
     private ImageView ivMessage;
     protected TextView txtTitle;
 
@@ -119,7 +110,7 @@ public class BaseAppCompatNoDrawerActivity extends BaseActivity {
         }*/
 
         setMessageScreenVisibility(false, false, false,
-                R.drawable.logo_splash, getString(R.string.label_nothing_to_show));
+                R.mipmap.ic_launcher_round, getString(R.string.label_nothing_to_show));
         setProgressScreenVisibility(false, false);
 
     }
@@ -168,35 +159,6 @@ public class BaseAppCompatNoDrawerActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
 
-    }
-
-    int getServerConnectionAvailableStatus(boolean isSnackbarEnabled) {
-        if (Config.getInstance().getAuthToken() == null || Config.getInstance().getAuthToken().equals("")) {
-            if (App.checkForToken() && !Config.getInstance().getAuthToken().equals("")) {
-                if (App.isNetworkAvailable()) {
-                    return SERVER_CONNECTION_AVAILABLE;
-                } else {
-                    if (isSnackbarEnabled)
-                        Snackbar.make(coordinatorLayout, AppConstants.NO_NETWORK_AVAILABLE, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show();
-                    return NETWORK_NOT_AVAILABLE;
-                }
-            } else {
-                if (isSnackbarEnabled)
-                    Snackbar.make(coordinatorLayout, AppConstants.WEB_ERROR_MSG, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show();
-                return App.AUTH_TOKEN_NOT_AVAILABLE;
-            }
-        } else {
-            if (App.isNetworkAvailable()) {
-                return SERVER_CONNECTION_AVAILABLE;
-            } else {
-                if (isSnackbarEnabled)
-                    Snackbar.make(coordinatorLayout, AppConstants.NO_NETWORK_AVAILABLE, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.btn_dismiss, snackBarDismissOnClickListener).show();
-                return NETWORK_NOT_AVAILABLE;
-            }
-        }
     }
 
     protected void setTitle(int title, int color) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools">
 	
 	<data>
@@ -23,11 +24,11 @@
 			
 			<LinearLayout style="@style/MenuItemParent">
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					style="@style/ItemLabel"
 					android:text="@string/label_total_balance" />
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					android:id="@+id/txtHomeTotalBalance"
 					style="@style/ItemValue"
 					android:text="@string/sample_00" />
@@ -36,11 +37,11 @@
 			
 			<LinearLayout style="@style/MenuItemParent">
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					style="@style/ItemLabel"
 					android:text="@string/label_interest" />
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					android:id="@+id/txtHomeInterest"
 					style="@style/ItemValue"
 					android:text="@string/sample_00" />
@@ -49,11 +50,11 @@
 			
 			<LinearLayout style="@style/MenuItemParent">
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					style="@style/ItemLabel"
 					android:text="@string/label_current_balance" />
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					android:id="@+id/txtHomeCurrentBalance"
 					style="@style/ItemValue"
 					android:text="@string/sample_00" />
@@ -69,11 +70,11 @@
 			
 			<LinearLayout style="@style/MenuItemParent">
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					style="@style/ItemLabel"
 					android:text="@string/label_zakaat_start_date" />
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					android:id="@+id/txtHomeZakaatStartDate"
 					style="@style/ItemValue"
 					android:gravity="center"
@@ -81,7 +82,7 @@
 			
 			</LinearLayout>
 			
-			<com.quartzbit.myzakaat.widgets.CustomButton
+			<Button
 				android:id="@+id/btnHomeEditZakaatStartDate"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -93,18 +94,21 @@
 				android:minWidth="100dp"
 				android:minHeight="40dp"
 				android:paddingLeft="20dp"
+				android:fontFamily="@font/roboto"
+				app:fontFamily="@font/roboto"
 				android:paddingRight="20dp"
 				android:text="@string/label_edit_date"
-				android:textColor="@color/white" />
+				android:textColor="@color/white"
+				android:layout_marginStart="5dp" />
 			
 			
 			<LinearLayout style="@style/MenuItemParent">
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					style="@style/ItemLabel"
 					android:text="@string/label_lowest_amount" />
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					android:id="@+id/txtHomeLowestAmount"
 					style="@style/ItemValue"
 					android:text="@string/sample_00" />
@@ -113,18 +117,18 @@
 			
 			<LinearLayout style="@style/MenuItemParent">
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					style="@style/ItemLabel"
 					android:text="@string/label_zakaat_amount" />
 				
-				<com.quartzbit.myzakaat.widgets.CustomTextView
+				<TextView
 					android:id="@+id/txtHomeZakaatAmount"
 					style="@style/ItemValue"
 					android:text="@string/sample_00" />
 			
 			</LinearLayout>
 			
-			<com.quartzbit.myzakaat.widgets.CustomButton
+			<Button
 				android:id="@+id/btnHomeViewBankDetails"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -136,6 +140,8 @@
 				android:minHeight="40dp"
 				android:paddingLeft="20dp"
 				android:paddingRight="20dp"
+				android:fontFamily="@font/roboto"
+				app:fontFamily="@font/roboto"
 				android:text="@string/btn_view_bank_details"
 				android:textColor="@color/white" />
 		
