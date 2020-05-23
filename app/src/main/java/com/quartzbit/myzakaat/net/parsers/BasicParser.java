@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 import com.quartzbit.myzakaat.app.App;
 import com.quartzbit.myzakaat.model.BasicBean;
-import com.quartzbit.myzakaat.model.PhotoBean;
-import com.quartzbit.myzakaat.model.VideoBean;
 
 public class BasicParser {
 
@@ -105,45 +103,7 @@ public class BasicParser {
                                 }*/
                             }
                         }
-                        if (dataObj.has("photos")) {
-                            JSONArray photoArray = dataObj.optJSONArray("photos");
-                            ArrayList<PhotoBean> list = new ArrayList<>();
 
-                            for (int i = 0; i < photoArray.length(); i++) {
-                                JSONObject photoObj = photoArray.optJSONObject(i);
-                                PhotoBean photoBean = new PhotoBean();
-
-                                if (photoObj.has("id")) {
-                                    photoBean.setId(photoObj.optString("id"));
-                                }
-                                if (photoObj.has("url")) {
-                                    photoBean.setUrl(photoObj.optString("url"));
-                                }
-                                list.add(photoBean);
-                            }
-                            basicBean.setPhotos(list);
-
-                        }
-
-                        if (dataObj.has("videos")) {
-                            JSONArray videoArray = dataObj.optJSONArray("videos");
-                            ArrayList<VideoBean> list = new ArrayList<>();
-
-                            for (int i = 0; i < videoArray.length(); i++) {
-                                JSONObject videoObj = videoArray.optJSONObject(i);
-                                VideoBean videoBean = new VideoBean();
-
-                                if (videoObj.has("id")) {
-                                    videoBean.setId(videoObj.optString("id"));
-                                }
-                                if (videoObj.has("url")) {
-                                    videoBean.setUrl(videoObj.optString("url"));
-                                }
-                                list.add(videoBean);
-                            }
-                            basicBean.setVideos(list);
-
-                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

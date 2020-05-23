@@ -10,14 +10,29 @@ import java.util.*
  */
 class TransactionListBean : BaseBean() {
 
+    var bankBean: BankBean = BankBean()
     var transactions: ArrayList<TransactionBean> = ArrayList()
     var pagination: PaginationBean = PaginationBean()
     var lastTransaction: TransactionBean? = null
 
-    fun getTransactionsOfDate(dateInMillis: Long): ArrayList<TransactionBean> {
-        var list = ArrayList<TransactionBean>()
-
+    fun setLastTransaction(dateInMillis: Long) {
         for (bean in transactions) {
+            if (dateInMillis > bean.date) {
+                lastTransaction = bean
+            } else if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
+                            false, dateInMillis, false)) {
+                lastTransaction = bean
+                break
+            } else {
+                break
+            }
+        }
+    }
+
+    fun getTransactionsOfDate(dateInMillis: Long): ArrayList<TransactionBean> {
+        val list = ArrayList<TransactionBean>()
+
+        for (bean in getTransactionFromLastTransaction()) {
             if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
                             false, dateInMillis, false)) {
                 list.add(bean)
@@ -27,19 +42,54 @@ class TransactionListBean : BaseBean() {
         return list
     }
 
-    fun getLastTransactionOfDate(dateInMillis: Long): TransactionBean? {
-        var list = ArrayList<TransactionBean>()
+    private fun getTransactionFromLastTransaction() =
+            if (lastTransaction != null)
+                transactions.subList(transactions.indexOf(lastTransaction!!), transactions.size)
+            else transactions
 
+    fun getLastLowestTransactionOfDate(dateInMillis: Long): TransactionBean? {
 
-        for (bean in transactions) {
-            if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
-                            false, dateInMillis, false)) {
-                list.add(bean)
+        val list = getTransactionsOfDate(dateInMillis)
+        var lowestTransactionBean: TransactionBean? = null
+        if (list.isNotEmpty()) {
+            for (bean in list) {
+                lowestTransactionBean?.let {
+                    if (bean.realBalance < it.realBalance) {
+                        lowestTransactionBean = bean
+                    }
+                } ?: kotlin.run {
+                    lowestTransactionBean = bean
+                }
                 lastTransaction = bean
             }
         }
+        lowestTransactionBean?.let {
+            return it
+        } ?: kotlin.run {
+            return lastTransaction
+        }
 
-        return if (!list.isEmpty()) list.last() else lastTransaction
+        /*for (bean in transactions) {
+            if (bean.dateString == App.getDateFromUnix(App.DATE_FORMAT_5, false,
+                            false, dateInMillis, false)) {
+                lastTransaction?.let {
+                    if (it.)
+                        lastTransaction = bean
+                } ?: kotlin.run {
+                    lastTransaction = bean
+                }
+            }
+        }*/
+
+    }
+
+    fun indexOf(transactionBean : TransactionBean): Int{
+        for(bean in transactions){
+            if(bean.id == transactionBean.id){
+                return transactions.indexOf(bean)
+            }
+        }
+        return -1;
     }
 
 

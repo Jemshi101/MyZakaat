@@ -60,7 +60,7 @@
 		<item name="android:fitsSystemWindows">true</item>
 		<item name="android:scaleType">centerCrop</item>
 		<item name="android:typeface">normal</item>
-		<item name="android:windowBackground">@color/white</item>
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:windowNoTitle">true</item>
 		<item name="colorControlHighlight">@color/colorPrimaryDark</item>
