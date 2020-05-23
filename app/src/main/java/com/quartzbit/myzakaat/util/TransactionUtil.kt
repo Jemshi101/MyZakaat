@@ -39,17 +39,22 @@ class TransactionUtil {
 
 
         override fun doInBackground(vararg p0: String?): HomeViewModel {
-            var cal = Calendar.getInstance()
+            val cal = Calendar.getInstance()
             cal.timeInMillis = mViewModel.zakaatStartDate.timeInMillis
 
             var isFirst = true
-            var currentLowestBalance = Float.MAX_VALUE
+
             mViewModel.currentBalance = 0F
-            mViewModel.currentInterest =  0F
+            mViewModel.currentInterest = 0F
             mViewModel.currentTotalBalance = 0F
 
 
+            var currentLowestBalance = getCurrentLowestBalance(cal);
+
+
             while (!DateUtils.isToday(cal.timeInMillis)) {
+
+
                 Log.i(TAG, "DATE : " + App.getDateFromUnix(App.DATE_FORMAT_4, false,
                         false, cal.timeInMillis, false))
                 var balance = 0F
@@ -65,9 +70,11 @@ class TransactionUtil {
                     }
                 }
                 if (isFirst) {
-                    currentLowestBalance = balance
+//                    currentLowestBalance = balance
                     isFirst = false
-                } else if (balance < currentLowestBalance) {
+                }
+
+                if (balance < currentLowestBalance) {
                     currentLowestBalance = balance
                 }
                 mViewModel.isFirst = isFirst
@@ -85,19 +92,46 @@ class TransactionUtil {
             return mViewModel
         }
 
+        private fun getCurrentLowestBalance(cal: Calendar): Float {
+            val currentLowestBalance: Float
+            val tempCal = Calendar.getInstance()
+            tempCal.timeInMillis = cal.timeInMillis
+
+            var balance = 0f
+
+            for (transactionListBean in mViewModel.transactionListBeanList) {
+                val transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
+                transactionBean?.let {
+                    val index = transactionListBean.indexOf(it)
+                    if (index != 0 && index != -1) {
+
+                        val bean = transactionListBean.transactions[index - 1]
+
+                        Log.i(TAG, "process : transactionBean : " + Gson().toJson(bean))
+                        balance += bean.realBalance
+                    }
+                }
+
+            }
+            currentLowestBalance = balance;
+
+            return currentLowestBalance
+        }
+
         override fun onProgressUpdate(vararg values: HomeViewModel) {
             super.onProgressUpdate(*values)
 
-            transactionUtilListener.publishProgress(values.get(0))
+            transactionUtilListener.publishProgress(values[0])
         }
 
         override fun onPostExecute(result: HomeViewModel?) {
             super.onPostExecute(result)
 
-            if (result != null)
-                transactionUtilListener.actionCompletedSuccessfully(result);
-            else
+            result?.let {
+                transactionUtilListener.actionCompletedSuccessfully(it);
+            } ?: kotlin.run {
                 transactionUtilListener.actionFailed("Processing Failed");
+            }
         }
     }
 

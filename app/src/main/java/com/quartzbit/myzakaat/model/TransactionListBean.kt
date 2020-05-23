@@ -38,5 +38,14 @@ class TransactionListBean : BaseBean() {
         return lastTransaction
     }
 
+    fun indexOf(transactionBean : TransactionBean): Int{
+        for(bean in transactions){
+            if(bean.id == transactionBean.id){
+                return transactions.indexOf(bean)
+            }
+        }
+        return -1;
+    }
+
 
 }
