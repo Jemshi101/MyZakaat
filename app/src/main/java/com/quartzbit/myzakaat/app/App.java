@@ -67,6 +67,7 @@ import java.util.TimeZone;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.multidex.MultiDex;
 
 //import com.digits.sdk.android.Digits;
 
@@ -195,7 +196,7 @@ public class App extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-//        MultiDex.install(this);
+        MultiDex.install(this);
     }
 
     @Override

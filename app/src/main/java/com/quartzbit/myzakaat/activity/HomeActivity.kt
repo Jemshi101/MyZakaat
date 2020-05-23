@@ -44,13 +44,14 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         const val BUTTON_TEXT = "Call Google Sheets API"
         const val PREF_ACCOUNT_NAME = "accountName"
 
-        val SCOPES = mutableListOf("https://www.googleapis.com/auth/spreadsheets.readonly",
-                "https://www.googleapis.com/auth/spreadsheets")
     }
 
     private lateinit var binding: ActivityHomeBinding
     lateinit var mCredential: GoogleAccountCredential
     private lateinit var bankListBean: BankListBean
+
+    val SCOPES = mutableListOf<String>("https://www.googleapis.com/auth/spreadsheets.readonly",
+            "https://www.googleapis.com/auth/spreadsheets")
 
 
     private lateinit var selectDateDialog: SelectDateDialog
@@ -59,16 +60,23 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+//        setContentView(R.layout.activity_home)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_home, null, false)
         setContentView(binding.root)
 
         mViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         initViews()
         populateHome()
-        setTitle(R.string.app_name, R.color.white)
 
+        getSupportActionBar()?.let {
+            setTitle(R.string.app_name, R.color.white)
+            it.title = ""
+            it.setDisplayHomeAsUpEnabled(false)
+            it.setHomeButtonEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
+            it.setDisplayShowTitleEnabled(true)
+        }
 
     }
 
@@ -78,8 +86,10 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
         binding.txtHomeInterest.text = mViewModel.currentInterest.toString()
         binding.txtHomeTotalBalance.text = mViewModel.currentTotalBalance.toString()
         binding.txtHomeLowestAmount.text = mViewModel.currentLowestBalance.toString()
-        val zakaat: Float = (mViewModel.currentLowestBalance * 2.5 / 100).toFloat()
-        binding.txtHomeZakaatAmount.text = zakaat.toString()
+        binding.txtHomeCurrentTransactionDate.text = mViewModel.currentTransactionDate
+        binding.txtHomeZakaatAmount.text = mViewModel.zakaat.toString()
+
+        binding.txtHomeLowestTransactionDate.text = mViewModel.lowestTransactionDate
 
         binding.txtHomeZakaatStartDate.text = App.getDateFromUnix(App.DATE_FORMAT_5, false,
                 false, mViewModel.zakaatStartDate.timeInMillis, false)
@@ -149,10 +159,10 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     private fun fetchTransactionList(position: Int, mCredential: GoogleAccountCredential) {
 
-        val urlParams = HashMap<String, String>()
-        val bankBean = bankListBean.banks[position]
-        urlParams["id"] = bankBean.id
-        urlParams["range"] = bankBean.range
+        var urlParams = HashMap<String, String>()
+        var bankBean = bankListBean.banks[position]
+        urlParams.put("id", bankBean.id)
+        urlParams.put("range", bankBean.range)
 
 //        DataManager.fetchTransactionList(urlParams, mCredential, TransactionListListener() { })
         DataManager.fetchTransactionList(urlParams, mCredential, object : TransactionListListener {
@@ -164,6 +174,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
             }
 
             override fun onLoadCompleted(transactionListBean: TransactionListBean) {
+                transactionListBean.bankBean = bankListBean.banks[position]
 
                 if (mViewModel.transactionListBeanList.size - 1 < position)
                     mViewModel.transactionListBeanList.add(transactionListBean)
@@ -234,7 +245,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
             var interest = 0F
             var totalBalance = 0F
             for (transactionListBean in mViewModel.transactionListBeanList) {
-                var transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
+                var transactionBean = transactionListBean.getLastLowestTransactionOfDate(cal.timeInMillis)
                 Log.i(TAG, "process : transactionBean : " + Gson().toJson(transactionBean))
                 if (transactionBean != null) {
                     balance += transactionBean.realBalance
@@ -329,7 +340,7 @@ class HomeActivity : BaseAppCompatNoDrawerActivity() {
 
     private fun onViewBankDetailsClick(view: View) {
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-        //mVibrator.vibrate(25)
+        //mVibrator.vibrate(25);
 
 
     }

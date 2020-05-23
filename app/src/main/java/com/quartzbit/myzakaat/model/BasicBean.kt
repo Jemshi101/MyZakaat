@@ -20,9 +20,6 @@ class BasicBean : BaseBean() {
 
     var url: String = ""
 
-    var photos: ArrayList<PhotoBean> = ArrayList()
-    var videos: ArrayList<VideoBean> = ArrayList()
-
     var address: String = ""
 
     /* private List<CountryBean> countries;

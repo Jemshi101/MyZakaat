@@ -52,21 +52,23 @@ class TransactionUtil {
             var currentLowestBalance = getCurrentLowestBalance(cal);
 
 
+            for (transactionListBean in mViewModel.transactionListBeanList) {
+                transactionListBean.setLastTransaction(cal.timeInMillis)
+            }
+
             while (!DateUtils.isToday(cal.timeInMillis)) {
-
-
                 Log.i(TAG, "DATE : " + App.getDateFromUnix(App.DATE_FORMAT_4, false,
                         false, cal.timeInMillis, false))
                 var balance = 0F
                 var interest = 0F
                 var totalBalance = 0F
                 for (transactionListBean in mViewModel.transactionListBeanList) {
-                    val transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
-                    Log.i(TAG, "process : transactionBean : " + Gson().toJson(transactionBean))
-                    if (transactionBean != null) {
-                        balance += transactionBean.realBalance
-                        interest += transactionBean.interest
-                        totalBalance += transactionBean.balance
+                    val transactionBean = transactionListBean.getLastLowestTransactionOfDate(cal.timeInMillis)
+                    transactionBean?.let {
+                        Log.i(TAG, "process : transactionBean : $it")
+                        balance += it.realBalance
+                        interest += it.interest
+                        totalBalance += it.balance
                     }
                 }
                 if (isFirst) {
@@ -76,12 +78,18 @@ class TransactionUtil {
 
                 if (balance < currentLowestBalance) {
                     currentLowestBalance = balance
+                    mViewModel.lowestTransactionDate = App.getDateFromUnix(App.DATE_FORMAT_4, false,
+                            false, cal.timeInMillis, false)
                 }
                 mViewModel.isFirst = isFirst
                 mViewModel.currentLowestBalance = currentLowestBalance
-                mViewModel.currentBalance = balance
-                mViewModel.currentInterest = interest
-                mViewModel.currentTotalBalance = totalBalance
+//                mViewModel.currentBalance = balance
+//                mViewModel.currentInterest = interest
+//                mViewModel.currentTotalBalance = totalBalance
+//                mViewModel.currentTotalBalance = totalBalance
+                mViewModel.currentTransactionDate = App.getDateFromUnix(App.DATE_FORMAT_4, false,
+                        false, cal.timeInMillis, false)
+                mViewModel.processTransaction()
 
                 publishProgress(mViewModel)
 //                transactionUtilListener.publishProgress(mViewModel)
@@ -100,7 +108,7 @@ class TransactionUtil {
             var balance = 0f
 
             for (transactionListBean in mViewModel.transactionListBeanList) {
-                val transactionBean = transactionListBean.getLastTransactionOfDate(cal.timeInMillis)
+                val transactionBean = transactionListBean.getLastLowestTransactionOfDate(cal.timeInMillis)
                 transactionBean?.let {
                     val index = transactionListBean.indexOf(it)
                     if (index != 0 && index != -1) {
@@ -139,7 +147,6 @@ class TransactionUtil {
     interface TransactionUtilListener {
         fun actionCompletedSuccessfully(mViewModel: HomeViewModel)
         fun publishProgress(mViewModel: HomeViewModel)
-
         fun actionFailed(errorMsg: String)
     }
 }

@@ -577,6 +577,7 @@
     <string name="label_till">Till</string>
     <string name="label_to_the">to the</string>
     <string name="label_you">You:</string>
+    
     <string name="message_add_group_member_failed">Group Member Addition Failed! Please Try	Again!</string>
     <string name="message_an_email_with_details_to_change_the_phone_number_is_sent_to_your_email_address">An Email with details to change the phone number is sent to your email address</string>
     <string name="message_blocking_user_failed">Blocking User Failed! Please Try Again!!</string>
@@ -610,6 +611,7 @@
     <string name="message_abuse_reported_successfully">Abuse Reported Successfully</string>
     <string name="message_you_dont_have_permission_to_access_the_department">You don\'t have permission to access the department</string>
     <string name="message_you_dont_have_permission_to_access_the_group">You don\'t have permission to access the group</string>
+    
     <string name="sample_tree_name">Tree Name</string>
     <string name="title_chat">CHAT</string>
     <string name="title_contact_details">Contact Details</string>
@@ -640,9 +642,11 @@
     <string name="label_lowest_amount">Lowest Amount</string>
     <string name="label_zakaat_amount">Zakaat Amount</string>
     <string name="btn_view_bank_details">View Bank Details</string>
-
-
-    <string-array name="prefix">
+	<string name="label_current_transaction_date">Current Transaction Date</string>
+	<string name="label_lowest_transaction_date">Lowest Transaction Date</string>
+	
+	
+	<string-array name="prefix">
         <item>Dr</item>
         <item>Master</item>
         <item>Miss</item>

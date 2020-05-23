@@ -18,6 +18,22 @@ class HomeViewModel : ViewModel() {
     var currentInterest: Float = 0F
     var currentTotalBalance: Float = 0F
     var zakaatStartDate = Calendar.getInstance()
+    var currentTransactionDate = ""
+    var lowestTransactionDate = ""
     var zakaat: Float = (currentLowestBalance * 2.5 / 100).toFloat()
 
+
+    fun processTransaction() {
+        zakaat = (currentLowestBalance * 2.5 / 100).toFloat()
+        currentBalance = 0f
+        currentInterest = 0f
+        currentTotalBalance = 0f
+        for (listBean in transactionListBeanList) {
+            listBean.lastTransaction?.let {
+                currentBalance += it.realBalance
+                currentInterest += it.interest
+                currentTotalBalance += it.balance
+            }
+        }
+    }
 }
